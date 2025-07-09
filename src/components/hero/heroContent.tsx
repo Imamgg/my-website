@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { OrbitingCircles } from "../ui/orbitingCircles";
 import { ProfileImage } from "./profileImage";
 import { TechStackIcons } from "./techStackIcons";
 import { cn } from "@/lib/utils";
+import gsap from "gsap";
 
 interface HeroContentProps {
   profileImageSrc: string;
@@ -13,8 +14,22 @@ export const HeroContent: React.FC<HeroContentProps> = ({
   profileImageSrc,
   profileImageAlt,
 }) => {
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (contentRef.current) {
+      gsap.fromTo(
+        contentRef.current,
+        { opacity: 0, scale: 0.92 },
+        { opacity: 1, scale: 1, duration: 1.4, ease: "power3.out", delay: 0.7 }
+      );
+    }
+  }, []);
+
   return (
-    <div className="relative flex h-[50rem] w-full items-center justify-center">
+    <div
+      ref={contentRef}
+      className="relative flex h-[50rem] w-full items-center justify-center"
+    >
       <div
         className={cn(
           "absolute inset-0",
