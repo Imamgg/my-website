@@ -21,7 +21,10 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="relative h-screen w-full flex justify-center items-center overflow-hidden">
+    <section
+      id="hero"
+      className="relative h-screen w-full flex justify-center items-center overflow-hidden"
+    >
       <div
         ref={morphRef}
         className="absolute top-24 left-0 z-10 w-full max-w-xl pl-8 text-left"

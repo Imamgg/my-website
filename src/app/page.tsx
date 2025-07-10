@@ -6,6 +6,7 @@ import Navbar from "@/components/navbar/navbar";
 import Hero from "@/components/hero/hero";
 import { AnimatedGridPattern } from "@/components/ui/animatedGridPattern";
 import { cn } from "@/lib/utils";
+import About from "@/components/about/about";
 
 export default function Home() {
   const [loadingPreloader, setLoadingPreloader] = useState(true);
@@ -49,10 +50,9 @@ export default function Home() {
           <Navbar />
           <main data-scroll-container className="flex flex-col items-center">
             <Hero />
-            <div className="flex items-center justify-center h-screen">
-              <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-200">
-                Test Page
-              </h1>
+            <About />
+            <div className="w-full h-screen flex items-center justify-center">
+              <h1>Test page</h1>
             </div>
           </main>
         </div>
