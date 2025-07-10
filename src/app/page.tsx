@@ -52,7 +52,6 @@ export default function Home() {
             <Hero />
             <About />
             <div className="w-full h-screen flex items-center justify-center">
-              <h1>Test page</h1>
             </div>
           </main>
         </div>

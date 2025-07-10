@@ -47,7 +47,7 @@ export default function NavMenuLink({
       >
         <div className="flex items-center space-x-3">
           <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 dark:from-blue-700 dark:to-blue-400 scale-0 group-hover:scale-100 transition-transform duration-300"></div>
-          <p className="text-slate-700 dark:text-slate-200 font-medium transition-colors group-hover:text-blue-700 dark:group-hover:text-blue-400 group-hover:font-semibold text-lg">
+          <p className="font-medium transition-colors group-hover:text-blue-700 dark:group-hover:text-blue-400 group-hover:font-semibold text-lg">
             {title}
           </p>
         </div>
