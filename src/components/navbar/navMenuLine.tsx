@@ -8,10 +8,10 @@ interface NavMenuLineProps {
 export default function NavMenuLine({ title }: NavMenuLineProps) {
   return (
     <div className="px-[clamp(1.25rem,3vw,2.5rem)]">
-      <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">
+      <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-300 dark:to-blue-700 bg-clip-text text-transparent">
         {title}
       </span>
-      <Separator className="mt-3 mb-4 bg-gradient-to-r from-blue-400/60 to-blue-500/50 h-[2px]" />
+      <Separator className="mt-3 mb-4 bg-gradient-to-r from-blue-400/60 to-blue-500/50 dark:from-blue-900/60 dark:to-blue-700/50 h-[2px]" />
     </div>
   );
 }

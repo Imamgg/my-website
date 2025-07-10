@@ -36,9 +36,9 @@ export default function NavMenuBtn({
         <button tabIndex={0} onClick={() => toggleHamburger(!active)}>
           <div
             className={cn(
-              "relative flex h-[50px] w-[50px] transform items-center justify-center rounded-full bg-zinc-200 backdrop-blur-md border border-blue-200/60 shadow-xl ring-0 ring-blue-400/30 transition-all duration-300 hover:ring-4 hover:shadow-blue-400/30 hover:border-blue-400/60 hover:bg-blue-50/95 hover:scale-105",
+              "relative flex h-[50px] w-[50px] transform items-center justify-center rounded-full dark:bg-zinc-200 bg-zinc-900 backdrop-blur-md border border-blue-200/60 dark:border-blue-900/60 shadow-xl ring-0 ring-blue-400/30 dark:ring-blue-900/30 transition-all duration-300 hover:ring-4 hover:shadow-blue-400/30 hover:border-blue-400/60 dark:hover:bg-blue-50/95 hover:bg-blue-900/80 hover:scale-105",
               {
-                "ring-4 rounded-full transition-all duration-200 ring-blue-400/60 border-blue-400/80 bg-blue-50/95 scale-105":
+                "ring-4 rounded-full transition-all duration-200 ring-blue-400/60 border-blue-400/80 bg-zinc-900 scale-105":
                   active,
               }
             )}

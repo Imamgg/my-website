@@ -31,10 +31,10 @@ export default function NavHome() {
             <div className="absolute inset-0 rounded-full scale-0 group-hover:scale-150 transition-transform duration-300"></div>
           </div>
           <div>
-            <p className="text-sm font-bold uppercase text-slate-700 group-hover:text-blue-600 transition-colors duration-300 leading-none">
+            <p className="text-sm font-bold uppercase dark:text-slate-200 text-zinc-700 group-hover:text-blue-600 transition-colors duration-300 leading-none">
               Coding with
             </p>
-            <p className="text-xs text-slate-500 group-hover:text-blue-500 transition-colors duration-300">
+            <p className="text-xs dark:text-slate-200 text-zinc-500 group-hover:text-blue-500 transition-colors duration-300">
               Imamgg
             </p>
           </div>

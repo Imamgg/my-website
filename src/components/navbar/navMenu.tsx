@@ -3,11 +3,13 @@
 import { cn } from "@/lib/utils";
 import gsap from "gsap";
 import { useEffect, useRef, useState } from "react";
-import { Github, Instagram, X } from "lucide-react";
+import { Github, Instagram, X, Linkedin, Sun, Moon } from "lucide-react";
 import { useIsomorphicLayoutEffect } from "motion/react";
 import NavMenuLink from "./navMenuLink";
-import Dock from "../ui/dock";
+import { Dock, DockIcon } from "../ui/dock";
 import NavMenuBtn from "./navMenuBtn";
+import { useTheme } from "next-themes";
+import Separator from "../ui/separator";
 
 export default function NavMenu() {
   const [active, setActive] = useState<boolean>(false);
@@ -69,31 +71,12 @@ export default function NavMenu() {
     setActive(false);
   };
 
-  const items = [
-    {
-      icon: <Github size={18} className="text-blue-600 hover:text-blue-700" />,
-      label: "GitHub",
-      href: "https://github.com/Imamgg",
-    },
-    {
-      icon: (
-        <Instagram size={18} className="text-blue-600 hover:text-blue-700" />
-      ),
-      label: "Instagram",
-      href: "https://instagram.com",
-    },
-    {
-      icon: <X size={18} className="text-blue-600 hover:text-blue-700" />,
-      label: "Twitter",
-      href: "https://twitter.com",
-    },
-  ];
   return (
     <>
       <div
         ref={menuBgRef}
         className={cn(
-          "fixed inset-0 bg-gradient-to-r from-black/20 via-blue-900/30 to-black/40 opacity-0 backdrop-blur-md",
+          "fixed inset-0 bg-gradient-to-r from-black/20 via-blue-900/30 to-black/40 dark:from-black/80 dark:via-blue-950/60 dark:to-black/90 opacity-0 backdrop-blur-md",
           active ? "pointer-events-auto" : "pointer-events-none"
         )}
         onClick={() => setActive(false)}
@@ -109,16 +92,16 @@ export default function NavMenu() {
           "nav-menu pointer-events-auto fixed top-0 right-0 h-full flex translate-x-[100%] will-change-transform"
         )}
       >
-        <div className="w-[400px] md:w-[500px] bg-zinc-200 backdrop-blur-xl border-l border-blue-200/50 shadow-2xl relative overflow-hidden">
+        <div className="w-[400px] md:w-[500px] bg-zinc-200 dark:bg-zinc-900 backdrop-blur-xl border-l border-blue-200/50 dark:border-blue-900/50 shadow-2xl relative overflow-hidden">
           {/* Decorative elements */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-blue-400/20 to-transparent rounded-bl-full"></div>
-          <div className="absolute bottom-0 right-0 w-48 h-48 bg-gradient-to-tl from-blue-300/15 to-transparent rounded-tl-full"></div>
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-blue-400/20 to-transparent dark:from-blue-900/30 rounded-bl-full"></div>
+          <div className="absolute bottom-0 right-0 w-48 h-48 bg-gradient-to-tl from-blue-300/15 to-transparent dark:from-blue-900/20 rounded-tl-full"></div>
 
           {/* Content */}
           <div className="relative z-10 h-full flex flex-col">
             {/* Header */}
             <div className="px-8 pt-20 pb-8">
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-2">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-300 dark:to-blue-500 bg-clip-text text-transparent border-b border-blue-200/50 dark:border-blue-900/50 pb-6 mb-2">
                 Navigation
               </h2>
             </div>
@@ -153,18 +136,72 @@ export default function NavMenu() {
 
             {/* Social Links Section */}
             <div className="px-8 pb-8">
-              <h3 className="text-sm font-semibold text-slate-600 mb-4 uppercase tracking-wide">
+              <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-300 mb-4 uppercase tracking-wide">
                 Connect
               </h3>
-              <div className="border-t border-blue-200/50 pt-6">
+              <div className="border-t border-blue-200/50 dark:border-blue-900/50 pt-6">
                 <div className="flex justify-center">
-                  <Dock
-                    items={items}
-                    baseItemSize={36}
-                    magnification={48}
-                    distance={100}
-                    spring={{ mass: 0.2, stiffness: 200, damping: 15 }}
-                  />
+                  <Dock iconSize={36} iconMagnification={48} iconDistance={100}>
+                    <DockIcon>
+                      <a
+                        href="https://github.com/Imamgg"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="GitHub"
+                      >
+                        <Github
+                          size={24}
+                          className="text-blue-600 hover:text-blue-700"
+                        />
+                      </a>
+                    </DockIcon>
+                    <DockIcon>
+                      <a
+                        href="https://instagram.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Instagram"
+                      >
+                        <Instagram
+                          size={24}
+                          className="text-blue-600 hover:text-blue-700"
+                        />
+                      </a>
+                    </DockIcon>
+                    <DockIcon>
+                      <a
+                        href="https://twitter.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Twitter"
+                      >
+                        <X
+                          size={24}
+                          className="text-blue-600 hover:text-blue-700"
+                        />
+                      </a>
+                    </DockIcon>
+                    <DockIcon>
+                      <a
+                        href="https://linkedin.com/in/yourprofile"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="LinkedIn"
+                      >
+                        <Linkedin
+                          size={24}
+                          className="text-blue-600 hover:text-blue-700"
+                        />
+                      </a>
+                    </DockIcon>
+                    <Separator
+                      orientation="vertical"
+                      className="h-full py-2 "
+                    />
+                    <DockIcon>
+                      <ThemeToggleBtn />
+                    </DockIcon>
+                  </Dock>
                 </div>
               </div>
             </div>
@@ -173,5 +210,24 @@ export default function NavMenu() {
       </div>
       <NavMenuBtn active={active} toggleHamburger={toggleHamburger} />
     </>
+  );
+}
+
+function ThemeToggleBtn() {
+  const { theme, setTheme } = useTheme();
+  const isDark = theme === "dark";
+  return (
+    <button
+      aria-label="Toggle Theme"
+      type="button"
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      className="focus:outline-none"
+    >
+      {isDark ? (
+        <Sun size={24} className="text-blue-600 hover:text-blue-700" />
+      ) : (
+        <Moon size={24} className="text-blue-600 hover:text-blue-700" />
+      )}
+    </button>
   );
 }

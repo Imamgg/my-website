@@ -28,11 +28,7 @@ const Hero = () => {
       >
         <MorphingText
           className="text-xl md:text-3xl lg:text-5xl"
-          texts={[
-            "I'm Imam Syafii",
-            "Informatics Engineering Student",
-            "Web3 Enthusiast",
-          ]}
+          texts={["I'm", "Imam Syafii", "Informatics Engineering Student"]}
         />
       </div>
       <HeroContent

@@ -284,7 +284,7 @@ export const TechStackIcons = {
   ),
 
   github: () => (
-    <div className="flex items-center justify-center w-12 h-12 bg-zinc-200 rounded-full">
+    <div className="flex items-center justify-center w-12 h-12 bg-zinc-200 dark:bg-zinc-900 rounded-full">
       <svg
         fill="#000000"
         viewBox="0 0 32 32"
