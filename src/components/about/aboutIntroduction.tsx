@@ -42,7 +42,7 @@ const AboutIntroduction = () => {
   };
 
   return (
-    <>
+    <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 px-6 pb-10">
       <div className="space-y-8">
         <div className="space-y-2 md:space-y-4">
           <BoxReveal>
@@ -84,13 +84,13 @@ const AboutIntroduction = () => {
               alt="Imamgg"
               width={200}
               height={200}
-              className="object-cover object-top filter grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110"
+              className="object-cover object-top filter md:grayscale grayscale-0 hover:grayscale-0 transition-all duration-300 hover:scale-110"
               onMouseEnter={handleImageHover}
             />
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

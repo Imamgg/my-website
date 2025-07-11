@@ -51,8 +51,6 @@ export default function Home() {
           <main data-scroll-container className="flex flex-col items-center">
             <Hero />
             <About />
-            <div className="w-full h-screen flex items-center justify-center">
-            </div>
           </main>
         </div>
       )}

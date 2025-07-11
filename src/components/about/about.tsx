@@ -1,5 +1,6 @@
 "use client";
 
+import ComputersCanvas from "./canvas/computers";
 import AboutBackground from "./aboutBackground";
 import AboutHeader from "./aboutHeader";
 import AboutIntroduction from "./aboutIntroduction";
@@ -11,8 +12,10 @@ const About = () => {
       <div className="mx-auto relative z-10 flex min-h-screen flex-col">
         <div>
           <AboutHeader />
-          <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 px-6">
-            <AboutIntroduction />
+          <AboutIntroduction />
+          <ComputersCanvas />
+          <div className="h-screen flex items-center justify-center">
+            <h1 className="text-4xl font-bold">Test Page</h1>
           </div>
         </div>
       </div>
