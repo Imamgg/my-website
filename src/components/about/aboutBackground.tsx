@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { AnimatedGridPattern } from "../ui/animatedGridPattern";
+import { AnimatedGridPattern } from "../ui/background/animatedGridPattern";
 import ScrollVelocity from "../ui/scrollVelocity";
 
 const AboutBackground = () => {

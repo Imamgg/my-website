@@ -45,7 +45,7 @@ const AboutIntroduction = () => {
   return (
     <>
       <AboutHeader text="About Me" />
-      <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 px-6 pb-10">
+      <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 pb-10">
         <div className="space-y-8">
           <div className="space-y-2 md:space-y-4">
             <BoxReveal>
@@ -59,16 +59,12 @@ const AboutIntroduction = () => {
             <BoxReveal>
               <div className="text-lg leading-relaxed">
                 <TextReveal inline>
-                  I am an enthusiastic and inquisitive individual, with a strong
-                  desire to continuously learn and grow. I believe that every
-                  experience is an opportunity to hone my skills and discover
-                  new things. I always seek challenges that push me outside my
-                  comfort zone and develop my potential.
+                  {`I'm Imam Syafii, an Informatics Engineering student currently studying at Trunojoyo University. I have a strong interest and focus on modern web development, from intuitive user interfaces to scalable back-end systems. Furthermore, I'm actively exploring Web3 and am passionate about exploring various innovations within it, such as blockchain, NFTs, and decentralized applications (dApps). I'm interested in how these technologies have the potential to transform the way we interact digitally.`}
                 </TextReveal>
               </div>
             </BoxReveal>
             <BoxReveal>
-              <blockquote className="border-l-2 md:border-l-4 border-purple-500 pl-3 md:pl-4 italic text-sm lg:text-base text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-800/50 p-3 md:p-4 lg:p-5 rounded-r-lg leading-relaxed">
+              <blockquote className="border-l-2 md:border-l-4 border-blue-500 pl-3 md:pl-4 italic text-sm lg:text-base text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-800/50 p-1 md:p-2 lg:p-3 rounded-r-lg leading-relaxed">
                 {'"Leveraging AI as a professional tool, not a replacement."'}
               </blockquote>
             </BoxReveal>

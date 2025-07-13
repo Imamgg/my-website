@@ -3,37 +3,19 @@
 import { Iphone15Pro } from "../ui/iphone15Pro";
 import { Ripple } from "../ui/ripple";
 import { HeroContent } from "./heroContent";
-import { MorphingText } from "../ui/morphingText";
-import { useRef, useEffect } from "react";
-import gsap from "gsap";
 
 const Hero = () => {
-  const morphRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    if (morphRef.current) {
-      gsap.fromTo(
-        morphRef.current,
-        { x: -100, opacity: 0 },
-        { x: 0, opacity: 1, duration: 1.8, ease: "power4.inOut", delay: 0.4 }
-      );
-    }
-  }, []);
-
   return (
     <section
       id="hero"
-      className="relative h-screen w-full flex justify-center items-center overflow-hidden"
+      className="relative w-full flex justify-center items-center overflow-hidden"
     >
-      <div
-        ref={morphRef}
-        className="absolute top-24 left-0 z-10 w-full max-w-xl pl-8 text-left"
+      <span
+        className="absolute left-2 md:block hidden top-1/2 -translate-y-1/2 text-8xl font-bold tracking-widest opacity-5 select-none pointer-events-none rotate-90"
+        aria-hidden="true"
       >
-        <MorphingText
-          className="text-xl md:text-3xl lg:text-5xl"
-          texts={["I'm", "Imam Syafii", "Informatics Engineering Student"]}
-        />
-      </div>
+        DEV
+      </span>
       <HeroContent
         profileImageSrc="/Profile.jpg"
         profileImageAlt="Imam Syafii"

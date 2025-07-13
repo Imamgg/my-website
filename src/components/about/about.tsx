@@ -7,17 +7,12 @@ import { Experience } from "./experience";
 
 const About = () => {
   return (
-    <section
-      id="about"
-      className="relative min-h-screen w-full overflow-hidden"
-    >
+    <section id="about" className="relative w-full overflow-hidden">
       <AboutBackground />
-      <div className="mx-auto relative z-10 flex min-h-screen flex-col">
-        <div>
-          <AboutIntroduction />
-          <Experience />
-          <ComputersCanvas />
-        </div>
+      <div className="mx-auto relative z-10 flex flex-col">
+        <AboutIntroduction />
+        <Experience />
+        <ComputersCanvas />
       </div>
     </section>
   );

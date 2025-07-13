@@ -10,7 +10,7 @@ export function Experience() {
       name: "WARGALAB TIF UTM",
       date: "Jul 2024 - Present",
       description:
-        "Member of the Communication and Information Division of the UTM informatics engineering society WARGALAB TIF. Working on projects related to technology and informatics, handling digital communication strategies, and organizing tech-related events.",
+        "Member of the WARGALAB TIF Training division, an informatics engineering student association, which focuses on the development and delivery of practical training programs in the field of technology and informatics.",
     },
     {
       name: "Wargalab TIF UTM [Practicum assistant]",
@@ -39,7 +39,7 @@ export function Experience() {
   ];
 
   return (
-    <div className="mb-20">
+    <div className="mb-10 md:mb-20">
       <AboutHeader
         text="Experience"
         className="flex items-center justify-center pt-6"

@@ -1,12 +1,13 @@
 "use client";
 import Preloader from "@/components/preloader/Preloader";
 import { useState } from "react";
-import { ScrollProgress } from "@/components/ui/scrollProgress";
+import { ScrollProgress } from "@/components/ui/background/scrollProgress";
 import Navbar from "@/components/navbar/navbar";
 import Hero from "@/components/hero/hero";
-import { AnimatedGridPattern } from "@/components/ui/animatedGridPattern";
+import { AnimatedGridPattern } from "@/components/ui/background/animatedGridPattern";
 import { cn } from "@/lib/utils";
 import About from "@/components/about/about";
+import Project from "@/components/project/project";
 
 export default function Home() {
   const [loadingPreloader, setLoadingPreloader] = useState(true);
@@ -30,6 +31,7 @@ export default function Home() {
           />
           <Preloader
             text="Hello, Everyone!"
+            showStickman={true}
             className="md:text-7xl text-3xl lg:text-6xl font-bold text-center text-slate-200"
             delay={100}
             duration={2}
@@ -51,6 +53,7 @@ export default function Home() {
           <main data-scroll-container className="flex flex-col items-center">
             <Hero />
             <About />
+            <Project />
           </main>
         </div>
       )}
