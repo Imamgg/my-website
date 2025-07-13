@@ -2,21 +2,21 @@
 
 import ComputersCanvas from "./canvas/computers";
 import AboutBackground from "./aboutBackground";
-import AboutHeader from "./aboutHeader";
 import AboutIntroduction from "./aboutIntroduction";
+import { Experience } from "./experience";
 
 const About = () => {
   return (
-    <section className="relative min-h-screen w-full overflow-hidden">
+    <section
+      id="about"
+      className="relative min-h-screen w-full overflow-hidden"
+    >
       <AboutBackground />
       <div className="mx-auto relative z-10 flex min-h-screen flex-col">
         <div>
-          <AboutHeader />
           <AboutIntroduction />
+          <Experience />
           <ComputersCanvas />
-          <div className="h-screen flex items-center justify-center">
-            <h1 className="text-4xl font-bold">Test Page</h1>
-          </div>
         </div>
       </div>
     </section>

@@ -7,6 +7,7 @@ import { TextReveal } from "../ui/textReveal";
 import { useRef } from "react";
 import { SpinningText } from "../ui/spinningText";
 import confetti from "canvas-confetti";
+import AboutHeader from "./aboutHeader";
 
 const AboutIntroduction = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -42,55 +43,63 @@ const AboutIntroduction = () => {
   };
 
   return (
-    <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 px-6 pb-10">
-      <div className="space-y-8">
-        <div className="space-y-2 md:space-y-4">
-          <BoxReveal>
-            <h2 className="text-3xl font-mono">
-              {`I'm a`}
-              <HyperText className="text-2xl py-0 md:text-3xl lg:text-4xl">
-                Full-Stack Developer
-              </HyperText>
-            </h2>
-          </BoxReveal>
-          <BoxReveal>
-            <div className="text-lg leading-relaxed">
-              <TextReveal inline>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Cupiditate adipisci, vero eos perspiciatis obcaecati voluptate
-                optio mollitia, dignissimos illum et reprehenderit enim numquam
-                quibusdam ullam itaque commodi modi voluptatem veniam.
-                Accusantium aliquam temporibus excepturi nostrum ipsa inventore.
-                Ut distinctio, officia enim, dolores vero ducimus iusto
-                dignissimos maxime tenetur assumenda ex facilis accusantium, quo
-                ipsum. Odit consequuntur blanditiis iste fugiat nam.
-              </TextReveal>
-            </div>
-          </BoxReveal>
+    <>
+      <AboutHeader text="About Me" />
+      <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 px-6 pb-10">
+        <div className="space-y-8">
+          <div className="space-y-2 md:space-y-4">
+            <BoxReveal>
+              <h2 className="text-3xl font-mono">
+                {`I'm a`}
+                <HyperText className="text-2xl py-0 md:text-3xl lg:text-4xl">
+                  Full-Stack Developer
+                </HyperText>
+              </h2>
+            </BoxReveal>
+            <BoxReveal>
+              <div className="text-lg leading-relaxed">
+                <TextReveal inline>
+                  I am an enthusiastic and inquisitive individual, with a strong
+                  desire to continuously learn and grow. I believe that every
+                  experience is an opportunity to hone my skills and discover
+                  new things. I always seek challenges that push me outside my
+                  comfort zone and develop my potential.
+                </TextReveal>
+              </div>
+            </BoxReveal>
+            <BoxReveal>
+              <blockquote className="border-l-2 md:border-l-4 border-purple-500 pl-3 md:pl-4 italic text-sm lg:text-base text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-800/50 p-3 md:p-4 lg:p-5 rounded-r-lg leading-relaxed">
+                {'"Leveraging AI as a professional tool, not a replacement."'}
+              </blockquote>
+            </BoxReveal>
+          </div>
         </div>
-      </div>
 
-      <div className="relative flex flex-col items-center justify-center">
-        <div
-          className="relative flex justify-center items-center"
-          ref={containerRef}
-        >
-          <SpinningText className="absolute" radius={13}>
-            404 not found • 404 not found • 404 not found •
-          </SpinningText>
-          <div className="relative z-10 flex size-[200px] items-center justify-center rounded-full overflow-hidden border border-gray-600 bg-gradient-to-br from-purple-500/20 to-blue-500/20 backdrop-blur">
-            <Image
-              src={"/Profile2.jpg"}
-              alt="Imamgg"
-              width={200}
-              height={200}
-              className="object-cover object-top filter md:grayscale grayscale-0 hover:grayscale-0 transition-all duration-300 hover:scale-110"
-              onMouseEnter={handleImageHover}
-            />
+        <div className="relative flex flex-col items-center justify-center">
+          <div
+            className="relative flex justify-center items-center"
+            ref={containerRef}
+          >
+            <SpinningText
+              radius={13}
+              className="absolute inset-0 flex items-center justify-center"
+            >
+              404 not found • 404 not found • 404 not found •
+            </SpinningText>
+            <div className="relative z-10 flex size-[200px] items-center justify-center rounded-full overflow-hidden border border-gray-600 bg-gradient-to-br from-purple-500/20 to-blue-500/20 backdrop-blur">
+              <Image
+                src={"/Profile2.jpg"}
+                alt="Imamgg"
+                width={200}
+                height={200}
+                className="object-cover object-top filter grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110"
+                onMouseEnter={handleImageHover}
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
