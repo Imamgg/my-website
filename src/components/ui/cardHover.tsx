@@ -308,7 +308,6 @@ export const ProjectLinks = ({
       {demo && (
         <a
           href={demo}
-          target="_blank"
           rel="noopener noreferrer"
           className="flex-1 flex items-center justify-center gap-2 px-4 py-2 text-sm rounded-lg bg-gradient-to-r from-blue-500 to-zinc-500 hover:from-blue-600 hover:to-zinc-600 transition-all duration-300 ease-out transform hover:scale-105"
         >

@@ -71,24 +71,24 @@ const AboutIntroduction = () => {
           </div>
         </div>
 
-        <div className="relative flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center">
           <div
-            className="relative flex justify-center items-center"
+            className="relative size-[300px] flex justify-center items-center"
             ref={containerRef}
           >
             <SpinningText
               radius={13}
-              className="absolute inset-0 flex items-center justify-center"
+              className="inset-0 absolute items-center justify-center"
             >
               404 not found • 404 not found • 404 not found •
             </SpinningText>
-            <div className="relative z-10 flex size-[200px] items-center justify-center rounded-full overflow-hidden border border-gray-600 bg-gradient-to-br from-purple-500/20 to-blue-500/20 backdrop-blur">
+            <div className="inset-0 z-10 size-[200px] items-center justify-center rounded-full overflow-hidden border border-gray-600 bg-gradient-to-br from-purple-500/20 to-blue-500/20 backdrop-blur">
               <Image
                 src={"/Profile2.jpg"}
                 alt="Imamgg"
-                width={200}
-                height={200}
-                className="object-cover object-top filter grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110"
+                width={300}
+                height={300}
+                className="object-cover object-top flex filter grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110"
                 onMouseEnter={handleImageHover}
               />
             </div>
