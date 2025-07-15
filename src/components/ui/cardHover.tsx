@@ -1,13 +1,12 @@
 import { cn } from "@/lib/utils";
-import { AnimatePresence, motion, useInView } from "motion/react";
+import { AnimatePresence, motion, useInView, Variants } from "motion/react";
 import Image from "next/image";
 import { useState, useRef } from "react";
 import { ShineBorder } from "./shineBorder";
-import { Github, Eye, ArrowRight } from "lucide-react";
+import { Github, Eye } from "lucide-react";
 import { InteractiveHoverButton } from "./Buttons/hoverButton";
 import Link from "next/link";
 
-// Individual Card Component with its own viewport detection
 const AnimatedCard = ({
   item,
   idx,
@@ -27,10 +26,30 @@ const AnimatedCard = ({
 }) => {
   const cardRef = useRef(null);
   const isCardInView = useInView(cardRef, {
-    amount: 0.3,
-    once: false,
-    margin: "0px 0px -100px 0px", // Trigger earlier
+    amount: 0.2,
+    once: false, // Changed to false to allow repeated animations
+    margin: "0px 0px -50px 0px",
   });
+
+  const cardVariants: Variants = {
+    hidden: {
+      opacity: 0,
+      y: 60,
+      scale: 0.9,
+      rotateX: 15,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      rotateX: 0,
+      transition: {
+        duration: 0.8,
+        delay: idx * 0.1,
+        ease: [0.25, 0.46, 0.45, 0.94],
+      },
+    },
+  };
 
   return (
     <motion.div
@@ -38,50 +57,35 @@ const AnimatedCard = ({
       className="relative group block p-2 h-full w-full"
       onMouseEnter={() => setHoveredIndex(idx)}
       onMouseLeave={() => setHoveredIndex(null)}
-      initial={{ opacity: 0, y: 50, scale: 0.9 }}
-      animate={
-        isCardInView
-          ? {
-              opacity: 1,
-              y: 0,
-              scale: 1,
-              transition: {
-                duration: 0.5,
-                delay: 0.1, // Small consistent delay for each card
-                ease: [0.25, 0.46, 0.45, 0.94],
-              },
-            }
-          : {
-              opacity: 0,
-              y: 50,
-              scale: 0.9,
-              transition: {
-                duration: 0.3,
-                ease: [0.25, 0.46, 0.45, 0.94],
-              },
-            }
-      }
+      variants={cardVariants}
+      initial="hidden"
+      animate={isCardInView ? "visible" : "hidden"}
+      whileHover={{
+        y: -4,
+        scale: 1.01,
+        transition: {
+          duration: 0.2,
+          ease: "easeOut",
+        },
+      }}
     >
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {hoveredIndex === idx && (
           <motion.span
-            className="absolute inset-0 h-full w-full bg-blue-200 dark:bg-slate-800/[0.8] block rounded-3xl"
-            layoutId="hoverBackground"
-            initial={{ opacity: 0, scale: 0.95 }}
+            className="absolute inset-0 h-full w-full bg-blue-200 dark:bg-zinc-500/10 block rounded-3xl"
+            initial={{ opacity: 0 }}
             animate={{
               opacity: 1,
-              scale: 1,
               transition: {
-                duration: 0.3,
-                ease: [0.4, 0.0, 0.2, 1],
+                duration: 0.15,
+                ease: "easeOut",
               },
             }}
             exit={{
               opacity: 0,
-              scale: 0.95,
               transition: {
-                duration: 0.2,
-                ease: [0.4, 0.0, 0.2, 1],
+                duration: 0.1,
+                ease: "easeInOut",
               },
             }}
           />
@@ -111,44 +115,35 @@ export const HoverEffect = ({
   className?: string;
 }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const buttonRef = useRef(null);
-  const isButtonInView = useInView(buttonRef, { amount: 0.3, once: false });
+  const containerRef = useRef(null);
 
-  const handleViewAll = () => {
-    // Create toast notification
-    const toast = document.createElement("div");
-    toast.className =
-      "fixed top-4 right-4 bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-3 rounded-lg shadow-lg z-[9999] flex items-center gap-2";
-    toast.style.transform = "translateX(100%)";
-    toast.style.transition = "all 0.3s ease-out";
-    toast.innerHTML = `
-      <span class="font-semibold">Soon! 🤣🤣</span>
-    `;
+  const isContainerInView = useInView(containerRef, {
+    amount: 0.1,
+    once: false, // Allow repeated animations
+    margin: "0px 0px -100px 0px",
+  });
 
-    document.body.appendChild(toast);
-
-    // Animate in
-    setTimeout(() => {
-      toast.style.transform = "translateX(0)";
-    }, 10);
-
-    // Animate out after 3 seconds
-    setTimeout(() => {
-      toast.style.transform = "translateX(100%)";
-      toast.style.opacity = "0";
-      setTimeout(() => {
-        if (document.body.contains(toast)) {
-          document.body.removeChild(toast);
-        }
-      }, 300);
-    }, 3000);
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        ease: [0.4, 0, 0.2, 1],
+        staggerChildren: 0.08, // Smooth stagger for re-entry
+      },
+    },
   };
 
   return (
     <div className="w-full">
-      <div
+      <motion.div
+        ref={containerRef}
+        variants={containerVariants}
+        initial="hidden"
+        animate={isContainerInView ? "visible" : "hidden"}
         className={cn(
-          "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 py-10",
+          "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 py-10 gap-4",
           className
         )}
       >
@@ -161,43 +156,6 @@ export const HoverEffect = ({
             setHoveredIndex={setHoveredIndex}
           />
         ))}
-      </div>
-      {/* View All Button */}
-      <motion.div
-        ref={buttonRef}
-        className="flex justify-end mb-6"
-        initial={{ opacity: 0, y: 30 }}
-        animate={
-          isButtonInView
-            ? {
-                opacity: 1,
-                y: 0,
-                transition: {
-                  duration: 0.6,
-                  delay: 0.2,
-                  ease: [0.25, 0.46, 0.45, 0.94],
-                },
-              }
-            : {
-                opacity: 0,
-                y: 30,
-                transition: {
-                  duration: 0.3,
-                  ease: [0.25, 0.46, 0.45, 0.94],
-                },
-              }
-        }
-      >
-        <button
-          onClick={handleViewAll}
-          className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-zinc-500 hover:from-blue-600 hover:to-zinc-600 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
-        >
-          <span>Lihat Semua</span>
-          <ArrowRight
-            size={16}
-            className="transition-transform duration-300 group-hover:translate-x-1"
-          />
-        </button>
       </motion.div>
     </div>
   );
@@ -243,6 +201,7 @@ export const ProjectImage = ({
         src={src}
         alt={alt}
         fill
+        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
         className="object-fill transition-all duration-500 ease-out group-hover:scale-110"
       />
     </div>
@@ -294,16 +253,16 @@ export const ProjectLinks = ({
   return (
     <div className={cn("flex gap-3 mt-4 p-4", className)}>
       {sourceCode && (
-        <InteractiveHoverButton>
-          <Link
-            href={sourceCode}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1 flex items-center justify-center"
-          >
+        <Link
+          href={sourceCode}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center"
+        >
+          <InteractiveHoverButton>
             <Github size={16} />
-          </Link>
-        </InteractiveHoverButton>
+          </InteractiveHoverButton>
+        </Link>
       )}
       {demo && (
         <a

@@ -59,7 +59,7 @@ const AboutIntroduction = () => {
             <BoxReveal>
               <div className="text-lg leading-relaxed">
                 <TextReveal inline>
-                  {`I'm Imam Syafii, an Informatics Engineering student currently studying at Trunojoyo University. I have a strong interest and focus on modern web development, from intuitive user interfaces to scalable back-end systems. Furthermore, I'm actively exploring Web3 and am passionate about exploring various innovations within it, such as blockchain, NFTs, and decentralized applications (dApps). I'm interested in how these technologies have the potential to transform the way we interact digitally.`}
+                  {`I'm Imam Syafii, an Informatics Engineering student currently studying at University of Trunojoyo Madura. I have a strong interest and focus on modern web development, from intuitive user interfaces to scalable back-end systems. Furthermore, I'm actively exploring Web3 and am passionate about exploring various innovations within it, such as blockchain, NFTs, and decentralized applications (dApps). I'm interested in how these technologies have the potential to transform the way we interact digitally.`}
                 </TextReveal>
               </div>
             </BoxReveal>

@@ -8,6 +8,7 @@ import { AnimatedGridPattern } from "@/components/ui/background/animatedGridPatt
 import { cn } from "@/lib/utils";
 import About from "@/components/about/about";
 import Project from "@/components/project/project";
+import Contact from "@/components/contact/contact";
 
 export default function Home() {
   const [loadingPreloader, setLoadingPreloader] = useState(true);
@@ -50,10 +51,14 @@ export default function Home() {
         <div className="h-full w-full bg-zinc-100 dark:bg-zinc-900">
           <ScrollProgress />
           <Navbar />
-          <main data-scroll-container className="flex flex-col items-center">
+          <main
+            data-scroll-container
+            className="relative flex flex-col items-center"
+          >
             <Hero />
             <About />
             <Project />
+            <Contact />
           </main>
         </div>
       )}
