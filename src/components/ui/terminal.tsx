@@ -97,7 +97,7 @@ interface TerminalProps {
 }
 
 export const Terminal = ({ children, className }: TerminalProps) => {
-  const terminalContentRef = useRef<HTMLElement>(null);
+  const terminalContentRef = useRef<HTMLPreElement>(null);
 
   useEffect(() => {
     // Auto scroll to bottom when new content is added
