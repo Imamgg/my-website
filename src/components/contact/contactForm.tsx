@@ -1,10 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "motion/react";
-import { Send, MessageSquare, User, Mail, MessageCircle } from "lucide-react";
+import { Send, User, Mail, MessageCircle, Loader2 } from "lucide-react";
 import emailjs from "@emailjs/browser";
-import { ShineBorder } from "../ui/shineBorder";
 import { toast } from "sonner";
 
 interface FormData {
@@ -26,6 +24,7 @@ const ContactForm = ({ onSubmit }: ContactFormProps) => {
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [focusedField, setFocusedField] = useState<string | null>(null);
 
   useEffect(() => {
     emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!);
@@ -40,7 +39,6 @@ const ContactForm = ({ onSubmit }: ContactFormProps) => {
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
-
     if (errors.submit) {
       setErrors((prev) => ({ ...prev, submit: "" }));
     }
@@ -92,6 +90,11 @@ const ContactForm = ({ onSubmit }: ContactFormProps) => {
       setErrors({});
       onSubmit(formData);
       setFormData({ name: "", email: "", message: "" });
+
+      toast.success("Message sent!", {
+        description: "Thanks for reaching out. I'll get back to you soon.",
+        duration: 4000,
+      });
     } catch (error) {
       console.error("Failed to send email:", error);
 
@@ -106,163 +109,117 @@ const ContactForm = ({ onSubmit }: ContactFormProps) => {
     }
   };
 
+  const inputBase =
+    "w-full px-4 py-3.5 bg-transparent border rounded-xl text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-600 transition-all duration-300 outline-none text-sm";
+
+  const getInputClass = (field: string) => {
+    if (errors[field]) return `${inputBase} border-red-400 dark:border-red-500`;
+    if (focusedField === field)
+      return `${inputBase} border-blue-400 dark:border-blue-500 shadow-sm shadow-blue-500/10`;
+    return `${inputBase} border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700`;
+  };
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.4, duration: 0.6 }}
-      className="border rounded-lg p-6 relative overflow-hidden"
-    >
-      <ShineBorder shineColor={["#A07CFE", "#2674eb", "#FFBE7B"]} />
-      <div className="relative z-10">
-        <div className="flex items-center gap-2 mb-6">
-          <MessageSquare className="w-5 h-5 text-primary" />
-          <h3 className="text-xl font-semibold">Send Message</h3>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Name Field */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1 }}
-            >
-              <label className="text-sm font-medium mb-2 flex items-center gap-2">
-                <User className="w-4 h-4 text-primary" />
-                Name
-              </label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                className={`w-full px-4 py-3 bg-background border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${
-                  errors.name
-                    ? "border-red-500 focus:ring-red-500"
-                    : "border-border"
-                }`}
-                placeholder="Your name"
-                disabled={isSubmitting}
-              />
-              {errors.name && (
-                <motion.p
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-red-500 text-xs mt-1"
-                >
-                  {errors.name}
-                </motion.p>
-              )}
-            </motion.div>
-
-            {/* Email Field */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              <label className="text-sm font-medium mb-2 flex items-center gap-2">
-                <Mail className="w-4 h-4 text-primary" />
-                Email
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className={`w-full px-4 py-3 bg-background border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${
-                  errors.email
-                    ? "border-red-500 focus:ring-red-500"
-                    : "border-border"
-                }`}
-                placeholder="mail@example.com"
-                disabled={isSubmitting}
-              />
-              {errors.email && (
-                <motion.p
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-red-500 text-xs mt-1"
-                >
-                  {errors.email}
-                </motion.p>
-              )}
-            </motion.div>
-          </div>
-
-          {/* Message Field */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <label className="text-sm font-medium mb-2 flex items-center gap-2">
-              <MessageCircle className="w-4 h-4 text-primary" />
-              Message
+    <div>
+      <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Name & Email row */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <User size={12} />
+              Name
             </label>
-            <textarea
-              name="message"
-              value={formData.message}
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
               onChange={handleInputChange}
-              rows={6}
-              className={`w-full px-4 py-3 bg-background border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-none ${
-                errors.message
-                  ? "border-red-500 focus:ring-red-500"
-                  : "border-border"
-              }`}
-              placeholder="Type your message here..."
+              onFocus={() => setFocusedField("name")}
+              onBlur={() => setFocusedField(null)}
+              className={getInputClass("name")}
+              placeholder="Your name"
               disabled={isSubmitting}
             />
-            <div className="flex justify-between items-center mt-1">
-              {errors.message ? (
-                <motion.p
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-red-500 text-xs"
-                >
-                  {errors.message}
-                </motion.p>
-              ) : (
-                <div />
-              )}
-              <span className="text-xs text-muted-foreground">
-                {formData.message.length}/500
-              </span>
-            </div>
-          </motion.div>
-
-          {/* Submit Button */}
-          <motion.button
-            type="submit"
-            disabled={isSubmitting}
-            whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
-            whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-            className={`w-full py-3 px-6 rounded-lg font-medium flex items-center justify-center gap-2 transition-all group ${
-              isSubmitting
-                ? "bg-primary/50 text-primary-foreground/50 cursor-not-allowed"
-                : "bg-primary text-primary-foreground hover:bg-primary/90"
-            }`}
-          >
-            {isSubmitting ? (
-              <>
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                  className="w-4 h-4 border-2 border-current border-t-transparent rounded-full"
-                />
-                Sending...
-              </>
-            ) : (
-              <>
-                <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                Send Message
-              </>
+            {errors.name && (
+              <p className="text-red-500 text-xs mt-1.5">{errors.name}</p>
             )}
-          </motion.button>
-        </form>
-      </div>
-    </motion.div>
+          </div>
+
+          <div>
+            <label className="text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <Mail size={12} />
+              Email
+            </label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              onFocus={() => setFocusedField("email")}
+              onBlur={() => setFocusedField(null)}
+              className={getInputClass("email")}
+              placeholder="mail@example.com"
+              disabled={isSubmitting}
+            />
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-1.5">{errors.email}</p>
+            )}
+          </div>
+        </div>
+
+        {/* Message */}
+        <div>
+          <label className="text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <MessageCircle size={12} />
+            Message
+          </label>
+          <textarea
+            name="message"
+            value={formData.message}
+            onChange={handleInputChange}
+            onFocus={() => setFocusedField("message")}
+            onBlur={() => setFocusedField(null)}
+            rows={5}
+            className={`${getInputClass("message")} resize-none`}
+            placeholder="Tell me about your project, idea, or just say hi..."
+            disabled={isSubmitting}
+          />
+          <div className="flex justify-between items-center mt-1.5">
+            {errors.message ? (
+              <p className="text-red-500 text-xs">{errors.message}</p>
+            ) : (
+              <div />
+            )}
+            <span className="text-[11px] font-mono text-zinc-400 dark:text-zinc-600">
+              {formData.message.length}/500
+            </span>
+          </div>
+        </div>
+
+        {/* Submit */}
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className={`w-full py-3.5 px-6 rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-all duration-300 ${
+            isSubmitting
+              ? "bg-zinc-200 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-600 cursor-not-allowed"
+              : "bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 active:scale-[0.98]"
+          }`}
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 size={16} className="animate-spin" />
+              Sending...
+            </>
+          ) : (
+            <>
+              <Send size={16} />
+              Send Message
+            </>
+          )}
+        </button>
+      </form>
+    </div>
   );
 };
 

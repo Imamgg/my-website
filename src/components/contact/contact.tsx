@@ -4,11 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ContactHeader from "./contactHeader";
-import TerminalWindow from "./terminalWindow";
 import ContactForm from "./contactForm";
 import { toast } from "sonner";
-import { AnimatedGridPattern } from "../ui/background/animatedGridPattern";
-import { cn } from "@/lib/utils";
+import { Github, Linkedin, Instagram, Twitter, Copy, Check } from "lucide-react";
+import Link from "next/link";
+import { socials, contactEmail, Social } from "@/data/socials";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -20,266 +20,151 @@ interface FormData {
   message: string;
 }
 
+const socialIconMap: Record<Social["iconName"], React.ReactNode> = {
+  github: <Github size={20} />,
+  linkedin: <Linkedin size={20} />,
+  instagram: <Instagram size={20} />,
+  twitter: <Twitter size={20} />,
+};
+
 const Contact = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const editorRef = useRef<HTMLDivElement>(null);
-  const terminalRef = useRef<HTMLDivElement>(null);
-
-  const [terminalHistory, setTerminalHistory] = useState<string[]>([
-    "$ npm run contact-form",
-    "$ Starting contact interface...",
-    "$ Ready to receive your message!",
-    "$ Waiting for user input...",
-  ]);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
+    if (!containerRef.current) return;
+
     const ctx = gsap.context(() => {
-      // Main container animation with improved easing and toggle actions
-      gsap.fromTo(
-        containerRef.current,
-        {
-          opacity: 0,
-          y: 80,
-          scale: 0.95,
-          filter: "blur(10px)",
-        },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          filter: "blur(0px)",
-          duration: 1.2,
-          ease: "power4.out",
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top 85%",
-            end: "bottom 15%",
-            toggleActions: "play reverse play reverse",
-            onEnter: () => {
-              gsap.to(containerRef.current, {
-                boxShadow: "0 25px 50px rgba(0, 0, 0, 0.1)",
-                duration: 0.6,
-                ease: "power2.out",
-              });
-            },
-            onLeave: () => {
-              gsap.to(containerRef.current, {
-                boxShadow: "0 0px 0px rgba(0, 0, 0, 0)",
-                duration: 0.3,
-                ease: "power2.out",
-              });
-            },
-            onEnterBack: () => {
-              gsap.to(containerRef.current, {
-                boxShadow: "0 25px 50px rgba(0, 0, 0, 0.1)",
-                duration: 0.6,
-                ease: "power2.out",
-              });
-            },
-            onLeaveBack: () => {
-              gsap.to(containerRef.current, {
-                boxShadow: "0 0px 0px rgba(0, 0, 0, 0)",
-                duration: 0.3,
-                ease: "power2.out",
-              });
-            },
-          },
-        }
-      );
+      const els = containerRef.current?.querySelectorAll(".contact-animate");
 
-      // Enhanced terminal and form animations with stagger effect
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 80%",
-          end: "bottom 20%",
-          toggleActions: "play reverse play reverse",
-        },
-      });
-
-      // Terminal animation with enhanced effects
-      tl.fromTo(
-        editorRef.current,
-        {
-          scale: 0.8,
-          opacity: 0,
-          rotateY: -25,
-          x: -60,
-          filter: "blur(8px)",
-        },
-        {
-          scale: 1,
-          opacity: 1,
-          rotateY: 0,
-          x: 0,
-          filter: "blur(0px)",
-          duration: 1,
-          ease: "back.out(1.4)",
-        }
-      )
-        // Contact form animation with enhanced effects
-        .fromTo(
-          terminalRef.current,
+      els?.forEach((el, i) => {
+        gsap.fromTo(
+          el,
+          { opacity: 0, y: 40 },
           {
-            scale: 0.8,
-            opacity: 0,
-            rotateY: 25,
-            x: 60,
-            filter: "blur(8px)",
-          },
-          {
-            scale: 1,
             opacity: 1,
-            rotateY: 0,
-            x: 0,
-            filter: "blur(0px)",
-            duration: 1,
-            ease: "back.out(1.4)",
-          },
-          "-=0.6"
+            y: 0,
+            duration: 0.7,
+            ease: "power3.out",
+            delay: i * 0.08,
+            scrollTrigger: {
+              trigger: el,
+              start: "top 88%",
+              toggleActions: "play none none reverse",
+            },
+          }
         );
-
-      // Add floating animation for continuous engagement
-      gsap.to([editorRef.current, terminalRef.current], {
-        y: -10,
-        duration: 2,
-        ease: "power2.inOut",
-        yoyo: true,
-        repeat: -1,
-        delay: 1,
-        stagger: {
-          amount: 0.5,
-          from: "start",
-        },
       });
-
-      // Add subtle rotation on hover for interactive feel
-      const handleMouseEnter = (element: HTMLElement) => {
-        gsap.to(element, {
-          scale: 1.02,
-          rotateY: 2,
-          duration: 0.3,
-          ease: "power2.out",
-        });
-      };
-
-      const handleMouseLeave = (element: HTMLElement) => {
-        gsap.to(element, {
-          scale: 1,
-          rotateY: 0,
-          duration: 0.3,
-          ease: "power2.out",
-        });
-      };
-
-      // Add mouse interaction listeners
-      if (editorRef.current) {
-        editorRef.current.addEventListener("mouseenter", () =>
-          handleMouseEnter(editorRef.current!)
-        );
-        editorRef.current.addEventListener("mouseleave", () =>
-          handleMouseLeave(editorRef.current!)
-        );
-      }
-
-      if (terminalRef.current) {
-        terminalRef.current.addEventListener("mouseenter", () =>
-          handleMouseEnter(terminalRef.current!)
-        );
-        terminalRef.current.addEventListener("mouseleave", () =>
-          handleMouseLeave(terminalRef.current!)
-        );
-      }
-
-      // Cleanup function for event listeners
-      return () => {
-        if (editorRef.current) {
-          editorRef.current.removeEventListener("mouseenter", () =>
-            handleMouseEnter(editorRef.current!)
-          );
-          editorRef.current.removeEventListener("mouseleave", () =>
-            handleMouseLeave(editorRef.current!)
-          );
-        }
-        if (terminalRef.current) {
-          terminalRef.current.removeEventListener("mouseenter", () =>
-            handleMouseEnter(terminalRef.current!)
-          );
-          terminalRef.current.removeEventListener("mouseleave", () =>
-            handleMouseLeave(terminalRef.current!)
-          );
-        }
-      };
     }, containerRef);
 
     return () => ctx.revert();
   }, []);
 
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText(contactEmail);
+    setCopied(true);
+    toast.success("Email copied to clipboard!");
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   const handleFormSubmit = (data: FormData) => {
-    const timestamp = new Date().toLocaleTimeString();
-
-    // Add visual feedback animation when form is submitted
-    gsap.to(terminalRef.current, {
-      scale: 1.05,
-      duration: 0.2,
-      ease: "power2.out",
-      yoyo: true,
-      repeat: 1,
+    toast.success("Message sent!", {
+      description: `Thanks ${data.name}, I'll get back to you soon.`,
+      duration: 4000,
     });
-
-    // Add glow effect to terminal
-    gsap.to(editorRef.current, {
-      boxShadow: "0 0 30px rgba(34, 197, 94, 0.3)",
-      duration: 0.5,
-      ease: "power2.out",
-      yoyo: true,
-      repeat: 1,
-    });
-
-    // Show terminal activity toast
-    toast.info("Terminal activity", {
-      description: `Message processing started for ${data.name}`,
-      duration: 3000,
-    });
-
-    // Update terminal history with new messages
-    const newMessages = [
-      `$ send-message --to="404imamgg@gmail.com"`,
-      `> Processing message from ${data.name}...`,
-      `> Message length: ${data.message.length} characters`,
-      `> Timestamp: ${timestamp}`,
-      `> Sending message...`,
-      `✓ Email sent successfully!`,
-      `✓ Thank you ${data.name}, for your message!`,
-      `$ Ready for next message...`,
-    ];
-
-    setTerminalHistory((prev) => [...prev, ...newMessages]);
   };
 
   return (
-    <section id="contact" className="relative w-full py-20 overflow-hidden">
-      <AnimatedGridPattern
-        numSquares={50}
-        maxOpacity={0.05}
-        duration={3}
-        width={60}
-        height={60}
-        repeatDelay={1}
-        className={cn(
-          "[mask-image:linear-gradient(to_bottom_right,white,transparent,transparent)] ",
-          "inset-x-0 inset-y-[-30%] h-[200%] skew-y-12"
-        )}
-      />
-      <div ref={containerRef} className="container mx-auto px-4 relative z-10">
+    <section id="contact" className="relative w-full py-20">
+      <div ref={containerRef} className="container mx-auto px-4 md:px-6 max-w-5xl">
         <ContactHeader />
-        <div className="grid lg:grid-cols-2 gap-8 mx-auto">
-          <div ref={editorRef} className="space-y-6">
-            <TerminalWindow terminalHistory={terminalHistory} />
+
+        <div className="grid lg:grid-cols-5 gap-10 lg:gap-14">
+          {/* Left column — Form (takes 3/5) */}
+          <div className="lg:col-span-3 contact-animate">
+            <div className="p-6 md:p-8 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/60 backdrop-blur-sm">
+              <ContactForm onSubmit={handleFormSubmit} />
+            </div>
           </div>
 
-          <div ref={terminalRef} className="space-y-6">
-            <ContactForm onSubmit={handleFormSubmit} />
+          {/* Right column — Socials + CTA (takes 2/5) */}
+          <div className="lg:col-span-2 flex flex-col gap-5">
+            {/* Copy email card */}
+            <div className="contact-animate">
+              <button
+                onClick={handleCopyEmail}
+                className="w-full group p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/60 backdrop-blur-sm hover:border-blue-400/50 dark:hover:border-blue-600/40 transition-all duration-300 text-left"
+              >
+                <p className="text-xs font-medium text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mb-2">
+                  Email
+                </p>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-zinc-700 dark:text-zinc-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
+                    {contactEmail}
+                  </span>
+                  {copied ? (
+                    <Check size={16} className="text-green-500" />
+                  ) : (
+                    <Copy
+                      size={16}
+                      className="text-zinc-400 group-hover:text-blue-500 transition-colors duration-300"
+                    />
+                  )}
+                </div>
+              </button>
+            </div>
+
+            {/* Social links */}
+            <div className="contact-animate">
+              <div className="p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/60 backdrop-blur-sm">
+                <p className="text-xs font-medium text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mb-4">
+                  Socials
+                </p>
+                <div className="flex flex-col gap-1">
+                  {socials.map((social) => (
+                    <Link
+                      key={social.name}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-3 px-3 py-2.5 -mx-3 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors duration-200"
+                    >
+                      <span className="text-zinc-400 dark:text-zinc-500 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors duration-300">
+                        {socialIconMap[social.iconName]}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-zinc-700 dark:text-zinc-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
+                          {social.name}
+                        </p>
+                        <p className="text-xs text-zinc-400 dark:text-zinc-500 truncate">
+                          {social.handle}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Status indicator */}
+            <div className="contact-animate">
+              <div className="p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/60 backdrop-blur-sm">
+                <div className="flex items-center gap-3">
+                  <div className="relative">
+                    <div className="w-3 h-3 rounded-full bg-green-500" />
+                    <div className="absolute inset-0 w-3 h-3 rounded-full bg-green-500 animate-ping opacity-40" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-zinc-700 dark:text-zinc-200">
+                      Available for work
+                    </p>
+                    <p className="text-xs text-zinc-400 dark:text-zinc-500">
+                      Open to freelance & collaboration
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

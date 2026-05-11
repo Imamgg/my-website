@@ -1,9 +1,10 @@
 "use client";
 
 import gsap from "gsap";
-import { Home, User, FolderOpen, Mail, ChevronDown } from "lucide-react";
+import { Home, User, FolderOpen, Mail, Award, ChevronDown } from "lucide-react";
 import { useIsomorphicLayoutEffect } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import NavSidebarItem from "./navSidebarItem";
 import NavSidebarItemMobile from "./navSidebarItemMobile";
@@ -11,6 +12,8 @@ import ThemeToggle from "./themeToggle";
 import type { NavItem } from "./navSidebarItem";
 
 export default function NavSidebar() {
+  const router = useRouter();
+  const pathname = usePathname();
   const [scroll, setScroll] = useState<LocomotiveScroll | null>(null);
   const [activeSection, setActiveSection] = useState<string>("#hero");
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
@@ -37,6 +40,11 @@ export default function NavSidebar() {
       icon: <Mail size={18} />,
       label: "Contact",
       scrollTarget: "#contact",
+    },
+    {
+      icon: <Award size={18} />,
+      label: "Certificates",
+      scrollTarget: "/certificates",
     },
   ];
 
@@ -168,11 +176,18 @@ export default function NavSidebar() {
     return () => ctx.kill();
   }, [isExpanded]);
 
-  const handleScroll = (id: string) => {
-    if (scroll) {
-      scroll.scrollTo(id, { duration: 2 });
+  const handleNav = (target: string) => {
+    if (target.startsWith("/")) {
+      router.push(target);
+    } else {
+      if (pathname !== "/") {
+        sessionStorage.setItem("scrollTarget", target);
+        router.push("/");
+      } else if (scroll) {
+        scroll.scrollTo(target, { duration: 2 });
+      }
+      setActiveSection(target);
     }
-    setActiveSection(id);
     setIsExpanded(false);
   };
 
@@ -187,7 +202,7 @@ export default function NavSidebar() {
             key={index}
             item={item}
             isActive={activeSection === item.scrollTarget}
-            onClick={() => handleScroll(item.scrollTarget)}
+            onClick={() => handleNav(item.scrollTarget)}
           />
         ))}
       </div>
@@ -218,7 +233,7 @@ export default function NavSidebar() {
               key={index}
               item={item}
               isActive={activeSection === item.scrollTarget}
-              onClick={() => handleScroll(item.scrollTarget)}
+              onClick={() => handleNav(item.scrollTarget)}
             />
           ))}
         </div>

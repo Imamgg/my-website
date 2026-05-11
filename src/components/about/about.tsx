@@ -6,12 +6,12 @@ import { Experience } from "./experience";
 
 const About = () => {
   return (
-    <section id="about" className="relative w-full overflow-hidden">
+    <section id="about" className="relative w-full">
       <AboutBackground />
       <div className="mx-auto relative z-10 flex flex-col">
         <AboutIntroduction />
-        <Experience />
       </div>
+      <Experience />
     </section>
   );
 };

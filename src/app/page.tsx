@@ -1,6 +1,6 @@
 "use client";
 import Preloader from "@/components/preloader/Preloader";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ScrollProgress } from "@/components/ui/background/scrollProgress";
 import Navbar from "@/components/navbar/navbar";
 import Hero from "@/components/hero/hero";
@@ -12,9 +12,32 @@ import Contact from "@/components/contact/contact";
 
 export default function Home() {
   const [loadingPreloader, setLoadingPreloader] = useState(true);
+
+  useEffect(() => {
+    if (sessionStorage.getItem("preloaderDone")) {
+      setLoadingPreloader(false);
+    }
+  }, []);
+
   const handlePreloaderComplete = () => {
+    sessionStorage.setItem("preloaderDone", "1");
     setLoadingPreloader(false);
   };
+
+  useEffect(() => {
+    if (loadingPreloader) return;
+
+    const target = sessionStorage.getItem("scrollTarget");
+    if (target) {
+      sessionStorage.removeItem("scrollTarget");
+      setTimeout(() => {
+        const el = document.querySelector(target);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 500);
+    }
+  }, [loadingPreloader]);
 
   return (
     <>

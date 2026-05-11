@@ -10,7 +10,7 @@ const AboutBackground = () => {
       <ScrollVelocity
         velocity={50}
         numCopies={4}
-        texts={["WEB DEVELOPER", "WEB3 ENTHUSIAST"]}
+        texts={["FULL-STACK DEV", "WEB3 ENTHUSIAST"]}
       />
       <AnimatedGridPattern
         numSquares={50}
