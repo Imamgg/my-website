@@ -30,21 +30,7 @@ export default function Home() {
               "inset-x-0 inset-y-[-30%] h-[200%] skew-y-12"
             )}
           />
-          <Preloader
-            text="Hello, Everyone!"
-            showStickman={true}
-            className="md:text-7xl text-3xl lg:text-6xl font-bold text-center text-slate-200"
-            delay={100}
-            duration={2}
-            ease="elastic.out(1, 0.3)"
-            splitType="chars"
-            from={{ opacity: 0, y: 40 }}
-            to={{ opacity: 1, y: 0 }}
-            threshold={0.1}
-            rootMargin="-100px"
-            textAlign="center"
-            onLetterAnimationComplete={handlePreloaderComplete}
-          />
+          <Preloader onComplete={handlePreloaderComplete} foodCount={3} />
         </div>
       )}
       {!loadingPreloader && (

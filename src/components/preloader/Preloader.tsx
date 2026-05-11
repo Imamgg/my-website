@@ -1,434 +1,466 @@
 "use client";
 
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { SplitText as GSAPSplitText } from "gsap/SplitText";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
-gsap.registerPlugin(ScrollTrigger, GSAPSplitText);
-
-export interface SplitTextProps {
-  text: string;
-  className?: string;
-  delay?: number;
-  duration?: number;
-  ease?: string | ((t: number) => number);
-  splitType?: "chars" | "words" | "lines" | "words, chars";
-  from?: gsap.TweenVars;
-  to?: gsap.TweenVars;
-  threshold?: number;
-  rootMargin?: string;
-  textAlign?: React.CSSProperties["textAlign"];
-  onLetterAnimationComplete?: () => void;
-  showStickman?: boolean;
+interface PreloaderProps {
+  onComplete: () => void;
+  foodCount?: number;
 }
 
-const Preloader: React.FC<SplitTextProps> = ({
-  text,
-  className = "",
-  delay = 100,
-  duration = 0.6,
-  ease = "power3.out",
-  splitType = "chars",
-  from = { opacity: 0, y: 40 },
-  to = { opacity: 1, y: 0 },
-  threshold = 0.1,
-  rootMargin = "-100px",
-  textAlign = "center",
-  onLetterAnimationComplete,
-  showStickman = false,
+interface Point {
+  x: number;
+  y: number;
+}
+
+type Direction = "UP" | "DOWN" | "LEFT" | "RIGHT";
+
+const CELL_SIZE = 20;
+const SNAKE_SPEED = 100;
+const INITIAL_SNAKE_LENGTH = 4;
+
+const Preloader: React.FC<PreloaderProps> = ({
+  onComplete,
+  foodCount = 5,
 }) => {
-  const ref = useRef<HTMLParagraphElement>(null);
-  const stickmanRef = useRef<HTMLDivElement>(null);
-  const animationCompletedRef = useRef(false);
-  const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const snakeRef = useRef<Point[]>([]);
+  const directionRef = useRef<Direction>("RIGHT");
+  const foodRef = useRef<Point | null>(null);
+  const collectedRef = useRef(0);
+  const isManualRef = useRef(false);
+  const gameLoopRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const animFrameRef = useRef<number>(0);
+  const gridColsRef = useRef(0);
+  const gridRowsRef = useRef(0);
+  const completedRef = useRef(false);
+  const [collected, setCollected] = useState(0);
+  const [fadingOut, setFadingOut] = useState(false);
+  const touchStartRef = useRef<Point | null>(null);
+
+  const spawnFood = useCallback(() => {
+    const cols = gridColsRef.current;
+    const rows = gridRowsRef.current;
+    if (cols === 0 || rows === 0) return;
+
+    let pos: Point;
+    let attempts = 0;
+    do {
+      pos = {
+        x: Math.floor(Math.random() * cols),
+        y: Math.floor(Math.random() * rows),
+      };
+      attempts++;
+    } while (
+      snakeRef.current.some((s) => s.x === pos.x && s.y === pos.y) &&
+      attempts < 100
+    );
+    foodRef.current = pos;
+  }, []);
+
+  const getAutoPilotDirection = useCallback((): Direction => {
+    const snake = snakeRef.current;
+    const food = foodRef.current;
+    const head = snake[0];
+    const current = directionRef.current;
+
+    if (!food) return current;
+
+    const cols = gridColsRef.current;
+    const rows = gridRowsRef.current;
+
+    const opposite: Record<Direction, Direction> = {
+      UP: "DOWN",
+      DOWN: "UP",
+      LEFT: "RIGHT",
+      RIGHT: "LEFT",
+    };
+
+    const moves: { dir: Direction; dx: number; dy: number }[] = [
+      { dir: "UP", dx: 0, dy: -1 },
+      { dir: "DOWN", dx: 0, dy: 1 },
+      { dir: "LEFT", dx: -1, dy: 0 },
+      { dir: "RIGHT", dx: 1, dy: 0 },
+    ];
+
+    const isSafe = (x: number, y: number): boolean => {
+      if (x < 0 || x >= cols || y < 0 || y >= rows) return false;
+      return !snake.some((s) => s.x === x && s.y === y);
+    };
+
+    const distance = (a: Point, b: Point): number => {
+      return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+    };
+
+    const validMoves = moves.filter((m) => {
+      if (m.dir === opposite[current]) return false;
+      return isSafe(head.x + m.dx, head.y + m.dy);
+    });
+
+    if (validMoves.length === 0) return current;
+
+    validMoves.sort((a, b) => {
+      const posA = { x: head.x + a.dx, y: head.y + a.dy };
+      const posB = { x: head.x + b.dx, y: head.y + b.dy };
+      return distance(posA, food) - distance(posB, food);
+    });
+
+    return validMoves[0].dir;
+  }, []);
+
+  const drawGame = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const w = canvas.width;
+    const h = canvas.height;
+
+    ctx.clearRect(0, 0, w, h);
+
+    ctx.strokeStyle = "rgba(63, 63, 70, 0.3)";
+    ctx.lineWidth = 0.5;
+    for (let x = 0; x <= w; x += CELL_SIZE) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, h);
+      ctx.stroke();
+    }
+    for (let y = 0; y <= h; y += CELL_SIZE) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(w, y);
+      ctx.stroke();
+    }
+
+    const food = foodRef.current;
+    if (food) {
+      const fx = food.x * CELL_SIZE + CELL_SIZE / 2;
+      const fy = food.y * CELL_SIZE + CELL_SIZE / 2;
+
+      const pulseTime = Date.now() / 400;
+      const pulseScale = 1 + Math.sin(pulseTime) * 0.15;
+      const pulseRadius = (CELL_SIZE / 2 - 2) * pulseScale;
+
+      ctx.save();
+      ctx.shadowColor = "#f43f5e";
+      ctx.shadowBlur = 18;
+
+      const outerGlow = ctx.createRadialGradient(fx, fy, 0, fx, fy, pulseRadius + 8);
+      outerGlow.addColorStop(0, "rgba(244, 63, 94, 0.3)");
+      outerGlow.addColorStop(1, "rgba(244, 63, 94, 0)");
+      ctx.fillStyle = outerGlow;
+      ctx.beginPath();
+      ctx.arc(fx, fy, pulseRadius + 8, 0, Math.PI * 2);
+      ctx.fill();
+
+      const gradient = ctx.createRadialGradient(fx, fy, 0, fx, fy, pulseRadius);
+      gradient.addColorStop(0, "#fda4af");
+      gradient.addColorStop(0.5, "#f43f5e");
+      gradient.addColorStop(1, "#be123c");
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(fx, fy, pulseRadius, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+      ctx.beginPath();
+      ctx.arc(fx - 2, fy - 2, pulseRadius * 0.3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    const snake = snakeRef.current;
+    snake.forEach((segment, i) => {
+      const sx = segment.x * CELL_SIZE;
+      const sy = segment.y * CELL_SIZE;
+      const t = 1 - i / snake.length;
+
+      ctx.save();
+
+      if (i === 0) {
+        ctx.shadowColor = "#3b82f6";
+        ctx.shadowBlur = 16;
+      } else {
+        ctx.shadowColor = "#3b82f6";
+        ctx.shadowBlur = 8 * t;
+      }
+
+      const segGrad = ctx.createLinearGradient(sx, sy, sx + CELL_SIZE, sy + CELL_SIZE);
+      if (i === 0) {
+        segGrad.addColorStop(0, "#60a5fa");
+        segGrad.addColorStop(1, "#3b82f6");
+      } else {
+        const alpha = 0.4 + 0.6 * t;
+        segGrad.addColorStop(0, `rgba(59, 130, 246, ${alpha})`);
+        segGrad.addColorStop(1, `rgba(37, 99, 235, ${alpha})`);
+      }
+
+      ctx.fillStyle = segGrad;
+
+      const pad = i === 0 ? 1 : 2;
+      const radius = i === 0 ? 5 : 3;
+      const size = CELL_SIZE - pad * 2;
+
+      ctx.beginPath();
+      ctx.roundRect(sx + pad, sy + pad, size, size, radius);
+      ctx.fill();
+
+      if (i === 0) {
+        ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+        const dir = directionRef.current;
+        let ex1: Point, ex2: Point;
+        const eyeSize = 2.5;
+        const center = { x: sx + CELL_SIZE / 2, y: sy + CELL_SIZE / 2 };
+
+        switch (dir) {
+          case "RIGHT":
+            ex1 = { x: center.x + 3, y: center.y - 3 };
+            ex2 = { x: center.x + 3, y: center.y + 3 };
+            break;
+          case "LEFT":
+            ex1 = { x: center.x - 3, y: center.y - 3 };
+            ex2 = { x: center.x - 3, y: center.y + 3 };
+            break;
+          case "UP":
+            ex1 = { x: center.x - 3, y: center.y - 3 };
+            ex2 = { x: center.x + 3, y: center.y - 3 };
+            break;
+          case "DOWN":
+            ex1 = { x: center.x - 3, y: center.y + 3 };
+            ex2 = { x: center.x + 3, y: center.y + 3 };
+            break;
+        }
+        ctx.beginPath();
+        ctx.arc(ex1.x, ex1.y, eyeSize, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(ex2.x, ex2.y, eyeSize, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    });
+
+    animFrameRef.current = requestAnimationFrame(drawGame);
+  }, []);
+
+  const moveSnake = useCallback(() => {
+    if (completedRef.current) return;
+
+    const snake = snakeRef.current;
+    const head = snake[0];
+    const cols = gridColsRef.current;
+    const rows = gridRowsRef.current;
+
+    if (!isManualRef.current) {
+      directionRef.current = getAutoPilotDirection();
+    }
+
+    const dir = directionRef.current;
+    let newHead: Point;
+
+    switch (dir) {
+      case "UP":
+        newHead = { x: head.x, y: head.y - 1 };
+        break;
+      case "DOWN":
+        newHead = { x: head.x, y: head.y + 1 };
+        break;
+      case "LEFT":
+        newHead = { x: head.x - 1, y: head.y };
+        break;
+      case "RIGHT":
+        newHead = { x: head.x + 1, y: head.y };
+        break;
+    }
+
+    if (newHead.x < 0) newHead.x = cols - 1;
+    if (newHead.x >= cols) newHead.x = 0;
+    if (newHead.y < 0) newHead.y = rows - 1;
+    if (newHead.y >= rows) newHead.y = 0;
+
+    const hitSelf = snake.some((s) => s.x === newHead.x && s.y === newHead.y);
+    if (hitSelf) {
+      snakeRef.current = [
+        { x: Math.floor(cols / 2), y: Math.floor(rows / 2) },
+      ];
+      for (let i = 1; i < INITIAL_SNAKE_LENGTH; i++) {
+        snakeRef.current.push({
+          x: Math.floor(cols / 2) - i,
+          y: Math.floor(rows / 2),
+        });
+      }
+      directionRef.current = "RIGHT";
+      isManualRef.current = false;
+      return;
+    }
+
+    snake.unshift(newHead);
+
+    const food = foodRef.current;
+    if (food && newHead.x === food.x && newHead.y === food.y) {
+      collectedRef.current += 1;
+      setCollected(collectedRef.current);
+
+      if (collectedRef.current >= foodCount) {
+        completedRef.current = true;
+        setFadingOut(true);
+        setTimeout(() => {
+          onComplete();
+        }, 800);
+        return;
+      }
+      spawnFood();
+    } else {
+      snake.pop();
+    }
+  }, [foodCount, onComplete, spawnFood, getAutoPilotDirection]);
 
   useEffect(() => {
-    if (typeof window === "undefined" || !ref.current || !text) return;
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
 
-    const el = ref.current;
-    const stickmanEl = stickmanRef.current;
+    const resize = () => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      canvas.width = w;
+      canvas.height = h;
+      gridColsRef.current = Math.floor(w / CELL_SIZE);
+      gridRowsRef.current = Math.floor(h / CELL_SIZE);
+    };
 
-    animationCompletedRef.current = false;
+    resize();
+    window.addEventListener("resize", resize);
 
-    // Stickman animation timeline
-    if (showStickman && stickmanEl) {
-      const stickmanTl = gsap.timeline();
+    const cols = gridColsRef.current;
+    const rows = gridRowsRef.current;
+    const startX = Math.floor(cols / 2);
+    const startY = Math.floor(rows / 2);
 
-      // Initial state (off-screen)
-      gsap.set(stickmanEl, {
-        opacity: 1,
-        scale: 0.5,
-        x: -120,
-        y: -40,
-        rotation: -15,
-      });
-
-      // Entrance animation
-      stickmanTl.to(stickmanEl, {
-        x: 0,
-        y: -20,
-        scale: 0.8,
-        rotation: -5,
-        duration: 1,
-        ease: "power2.out",
-      });
-
-      // Flying animation loop
-      stickmanTl
-        .to(stickmanEl, {
-          y: -30,
-          rotation: 5,
-          duration: 0.8,
-          ease: "power2.inOut",
-        })
-        .to(stickmanEl, {
-          y: -15,
-          rotation: -3,
-          duration: 0.6,
-          ease: "power2.inOut",
-        })
-        .to(stickmanEl, {
-          y: -25,
-          rotation: 2,
-          duration: 0.7,
-          ease: "power2.inOut",
-        }); // Energy trail particles animation
-      const particles = stickmanEl.querySelectorAll(".jetpack-particle");
-      particles.forEach((particle, i) => {
-        // Initial particles state
-        gsap.set(particle, { opacity: 0, scaleX: 0.3 });
-
-        // Particles start animation (delayed for entrance)
-        gsap.to(particle, {
-          opacity: 0.8 - i * 0.1,
-          scaleX: 1,
-          duration: 0.5,
-          delay: 1 + i * 0.1,
-          ease: "power2.out",
-        });
-
-        // Continuous trail animation (moving backwards)
-        gsap.to(particle, {
-          x: -60 - i * 20,
-          opacity: 0,
-          scaleX: 0.2,
-          duration: 0.6,
-          delay: 1.5 + i * 0.05,
-          repeat: -1,
-          ease: "power2.out",
-        });
-      });
-
-      // Progress bar animation
-      const progressFill = stickmanEl.querySelector(".progress-fill");
-      if (progressFill) {
-        gsap.to(progressFill, {
-          width: "100%",
-          duration: 2.5,
-          delay: 1,
-          ease: "power2.inOut",
-        });
-      }
-
-      // Engine glow intensification during exit preparation
-      const engineGlow = stickmanEl.querySelector(".animate-pulse");
-      if (engineGlow) {
-        gsap.to(engineGlow, {
-          scale: 1.2,
-          opacity: 0.8,
-          duration: 0.3,
-          delay: 2.7,
-          ease: "power2.out",
-        });
-      }
-
-      // Cockpit window flash effect before exit
-      const cockpitWindow = stickmanEl.querySelector(".bg-gradient-to-br");
-      if (cockpitWindow) {
-        gsap.to(cockpitWindow, {
-          scale: 1.1,
-          opacity: 1,
-          duration: 0.2,
-          delay: 2.9,
-          ease: "power2.out",
-        });
-      }
-
-      // Spaceship vibration effect before exit (charging up)
-      gsap.to(stickmanEl, {
-        x: "+=2",
-        y: "+=1",
-        rotation: "+=1",
-        duration: 0.1,
-        delay: 2.7,
-        repeat: 5,
-        yoyo: true,
-        ease: "power2.inOut",
-      });
-
-      // Hide stickman after 3 seconds with exit animation
-      gsap.to(stickmanEl, {
-        x: 150,
-        y: -100,
-        rotation: 25,
-        scale: 0.4,
-        duration: 1.5,
-        delay: 3,
-        ease: "power2.inOut",
-      });
-
-      // Fade out stickman smoothly
-      gsap.to(stickmanEl, {
-        opacity: 0,
-        duration: 1,
-        delay: 4,
-        ease: "power2.out",
-        onComplete: () => {
-          if (stickmanEl) {
-            stickmanEl.style.display = "none";
-          }
-        },
-      });
-
-      // Engine boost effect before exit (stronger thrust)
-      const engineCore = stickmanEl.querySelector(".animate-ping");
-      if (engineCore) {
-        gsap.to(engineCore, {
-          scale: 1.5,
-          opacity: 1,
-          duration: 0.4,
-          delay: 2.7,
-          ease: "power2.out",
-        });
-      }
-
-      // Progress bar final push
-      if (progressFill) {
-        gsap.to(progressFill, {
-          width: "110%",
-          duration: 0.5,
-          delay: 2.8,
-          ease: "power3.out",
-        });
-      }
-
-      // Energy trail boost effect before exit
-      gsap.to(particles, {
-        scaleX: 2.5,
-        opacity: 1,
-        duration: 0.4,
-        delay: 2.8,
-        ease: "power2.out",
-      });
-
-      // Extended trail during exit
-      gsap.to(particles, {
-        x: -120,
-        scaleX: 3,
-        opacity: 0.9,
-        duration: 0.8,
-        delay: 3,
-        ease: "power2.inOut",
-      });
-
-      // Final trail fade out
-      gsap.to(particles, {
-        opacity: 0,
-        scaleX: 0.1,
-        duration: 0.8,
-        delay: 3.8,
-        ease: "power2.in",
-      });
+    snakeRef.current = [];
+    for (let i = 0; i < INITIAL_SNAKE_LENGTH; i++) {
+      snakeRef.current.push({ x: startX - i, y: startY });
     }
 
-    const absoluteLines = splitType === "lines";
-    if (absoluteLines) el.style.position = "relative";
+    directionRef.current = "RIGHT";
+    collectedRef.current = 0;
+    completedRef.current = false;
+    setCollected(0);
+    spawnFood();
 
-    let splitter: GSAPSplitText;
-    try {
-      splitter = new GSAPSplitText(el, {
-        type: splitType,
-        absolute: absoluteLines,
-        linesClass: "split-line",
-      });
-    } catch (error) {
-      console.error("Failed to create SplitText:", error);
-      return;
-    }
+    gameLoopRef.current = setInterval(moveSnake, SNAKE_SPEED);
+    animFrameRef.current = requestAnimationFrame(drawGame);
 
-    let targets: Element[];
-    switch (splitType) {
-      case "lines":
-        targets = splitter.lines;
-        break;
-      case "words":
-        targets = splitter.words;
-        break;
-      case "chars":
-        targets = splitter.chars;
-        break;
-      default:
-        targets = splitter.chars;
-    }
+    const handleKey = (e: KeyboardEvent) => {
+      const current = directionRef.current;
+      let next: Direction | null = null;
 
-    if (!targets || targets.length === 0) {
-      console.warn("No targets found for SplitText animation");
-      splitter.revert();
-      return;
-    }
-
-    targets.forEach((t) => {
-      (t as HTMLElement).style.willChange = "transform, opacity";
-    });
-
-    const startPct = (1 - threshold) * 100;
-    const marginMatch = /^(-?\d+(?:\.\d+)?)(px|em|rem|%)?$/.exec(rootMargin);
-    const marginValue = marginMatch ? parseFloat(marginMatch[1]) : 0;
-    const marginUnit = marginMatch ? marginMatch[2] || "px" : "px";
-    const sign =
-      marginValue < 0
-        ? `-=${Math.abs(marginValue)}${marginUnit}`
-        : `+=${marginValue}${marginUnit}`;
-    const start = `top ${startPct}%${sign}`;
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: el,
-        start,
-        toggleActions: "play none none none",
-        once: true,
-        onToggle: (self) => {
-          scrollTriggerRef.current = self;
-        },
-      },
-      smoothChildTiming: true,
-      onComplete: () => {
-        animationCompletedRef.current = true;
-        gsap.set(targets, {
-          ...to,
-          clearProps: "willChange",
-          immediateRender: true,
-        });
-        onLetterAnimationComplete?.();
-      },
-    });
-
-    tl.set(targets, { ...from, immediateRender: false, force3D: true });
-    tl.to(targets, {
-      ...to,
-      duration,
-      ease,
-      stagger: delay / 1000,
-      force3D: true,
-    });
-
-    return () => {
-      tl.kill();
-      if (scrollTriggerRef.current) {
-        scrollTriggerRef.current.kill();
-        scrollTriggerRef.current = null;
+      switch (e.key) {
+        case "ArrowUp":
+        case "w":
+        case "W":
+          if (current !== "DOWN") next = "UP";
+          break;
+        case "ArrowDown":
+        case "s":
+        case "S":
+          if (current !== "UP") next = "DOWN";
+          break;
+        case "ArrowLeft":
+        case "a":
+        case "A":
+          if (current !== "RIGHT") next = "LEFT";
+          break;
+        case "ArrowRight":
+        case "d":
+        case "D":
+          if (current !== "LEFT") next = "RIGHT";
+          break;
       }
-      gsap.killTweensOf(targets);
-      if (splitter) {
-        splitter.revert();
+
+      if (next) {
+        e.preventDefault();
+        directionRef.current = next;
+        isManualRef.current = true;
       }
     };
-  }, [
-    text,
-    delay,
-    duration,
-    ease,
-    splitType,
-    from,
-    to,
-    threshold,
-    rootMargin,
-    onLetterAnimationComplete,
-    showStickman,
-  ]);
+
+    const handleTouchStart = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (!touchStartRef.current) return;
+      const touch = e.changedTouches[0];
+      const dx = touch.clientX - touchStartRef.current.x;
+      const dy = touch.clientY - touchStartRef.current.y;
+      const minSwipe = 30;
+
+      if (Math.abs(dx) < minSwipe && Math.abs(dy) < minSwipe) return;
+
+      const current = directionRef.current;
+      let next: Direction | null = null;
+
+      if (Math.abs(dx) > Math.abs(dy)) {
+        next = dx > 0 ? (current !== "LEFT" ? "RIGHT" : null) : (current !== "RIGHT" ? "LEFT" : null);
+      } else {
+        next = dy > 0 ? (current !== "UP" ? "DOWN" : null) : (current !== "DOWN" ? "UP" : null);
+      }
+
+      if (next) {
+        directionRef.current = next;
+        isManualRef.current = true;
+      }
+
+      touchStartRef.current = null;
+    };
+
+    window.addEventListener("keydown", handleKey);
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchend", handleTouchEnd, { passive: true });
+
+    return () => {
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("keydown", handleKey);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchend", handleTouchEnd);
+      if (gameLoopRef.current) clearInterval(gameLoopRef.current);
+      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+    };
+  }, [spawnFood, moveSnake, drawGame]);
 
   return (
-    <div className="relative inline-block">
-      {/* Spaceship Loader */}
-      {showStickman && (
-        <div
-          ref={stickmanRef}
-          className="absolute -top-20 left-1/2 transform -translate-x-1/2 z-10"
-          style={{ opacity: 0 }}
-        >
-          {/* Main Spaceship Container */}
-          <div className="relative w-24 h-16">
-            {/* Energy Trail/Laser Beams */}
-            <div className="absolute top-1 left-16 w-8 h-1 bg-gradient-to-r from-purple-600 to-blue-500 rounded-full jetpack-particle opacity-80 shadow-lg shadow-purple-500/50"></div>
-            <div className="absolute top-3 left-16 w-6 h-0.5 bg-gradient-to-r from-purple-500 to-blue-400 rounded-full jetpack-particle opacity-70 shadow-md shadow-purple-400/40"></div>
-            <div className="absolute top-2 left-16 w-7 h-0.5 bg-gradient-to-r from-purple-700 to-blue-600 rounded-full jetpack-particle opacity-60 shadow-sm shadow-purple-600/30"></div>
-            <div className="absolute top-4 left-16 w-9 h-0.5 bg-gradient-to-r from-purple-400 to-blue-300 rounded-full jetpack-particle opacity-50 shadow-sm shadow-purple-300/20"></div>
+    <div
+      ref={containerRef}
+      className={`absolute inset-0 z-50 transition-opacity duration-700 ${fadingOut ? "opacity-0" : "opacity-100"}`}
+    >
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
 
-            {/* Main Body - Triangle Shape */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-10">
+        <div className="flex items-center gap-2 px-4 py-2 rounded-full glass-container">
+          {Array.from({ length: foodCount }).map((_, i) => (
             <div
-              className="absolute top-2 left-2"
-              style={{
-                width: 0,
-                height: 0,
-                borderTop: "6px solid transparent",
-                borderRight: "60px solid #7C3AED",
-                borderBottom: "6px solid transparent",
-              }}
-            ></div>
-
-            {/* Main Cockpit - Circle */}
-            <div className="absolute top-0 -right-2 w-6 h-6 bg-purple-600 rounded-full border-2 border-purple-400">
-              {/* Cockpit Window */}
-              <div className="absolute top-1 left-1 w-4 h-4 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full"></div>
-            </div>
-
-            {/* Wing Extension */}
-            <div
-              className="absolute top-0 right-4"
-              style={{
-                width: 0,
-                height: 0,
-                borderTop: "0px solid transparent",
-                borderRight: "50px solid #7C3AED",
-                borderBottom: "16px solid transparent",
-              }}
-            ></div>
-
-            {/* Engine/Thruster */}
-            <div className="absolute top-1 right-6 w-5 h-3 bg-gradient-to-r from-purple-700 to-purple-500 rounded-l-full shadow-lg shadow-purple-600/60">
-              {/* Engine Glow */}
-              <div className="absolute -top-0.5 -left-1 w-6 h-4 bg-purple-400 rounded-full opacity-40 animate-pulse"></div>
-              {/* Engine Core */}
-              <div className="absolute top-0.5 left-1 w-3 h-2 bg-blue-400 rounded-full animate-ping"></div>
-            </div>
-
-            {/* Progress Bar */}
-            <div className="absolute top-8 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gray-800 rounded-full overflow-hidden shadow-inner">
-              <div className="progress-fill h-full bg-gradient-to-r from-purple-600 via-blue-500 to-cyan-400 rounded-full w-0 shadow-sm"></div>
-            </div>
-
-            {/* Additional Details */}
-            <div className="absolute top-3 right-8 w-1 h-1 bg-blue-400 rounded-full animate-ping shadow-sm shadow-blue-400/50"></div>
-            <div className="absolute top-1 right-9 w-0.5 h-0.5 bg-purple-300 rounded-full animate-pulse shadow-sm shadow-purple-300/50"></div>
-            <div className="absolute top-2.5 right-7 w-0.5 h-0.5 bg-cyan-300 rounded-full animate-bounce shadow-sm shadow-cyan-300/50"></div>
-          </div>
+              key={i}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                i < collected
+                  ? "bg-blue-500 shadow-md shadow-blue-500/50 scale-110"
+                  : "bg-zinc-600/50 scale-90"
+              }`}
+            />
+          ))}
         </div>
-      )}
 
-      <p
-        ref={ref}
-        className={`split-parent ${className}`}
-        style={{
-          textAlign,
-          overflow: "hidden",
-          display: "inline-block",
-          whiteSpace: "normal",
-          wordWrap: "break-word",
-        }}
-      >
-        {text}
-      </p>
+        <p className="text-zinc-500 text-xs tracking-wider uppercase font-mono">
+          {collected < foodCount
+            ? "Use arrow keys or swipe to play"
+            : "Loading..."}
+        </p>
+      </div>
     </div>
   );
 };
