@@ -11,7 +11,7 @@ const personSchema = {
   image: `${siteUrl}/Profile.jpg`,
   jobTitle: "Full-Stack Developer",
   description:
-    "Full-Stack Developer & Web3 Enthusiast. Mahasiswa Teknik Informatika Universitas Trunojoyo Madura yang berpengalaman dalam Next.js, Laravel, React, Node.js, dan teknologi blockchain.",
+    "Full-Stack Developer & Web3 Enthusiast. Mahasiswa Teknik Informatika Universitas Trunodjoyo Madura yang berpengalaman dalam Next.js, Laravel, React, Node.js, dan teknologi blockchain.",
   email: "404imamgg@gmail.com",
   sameAs: [
     "https://github.com/Imamgg",
@@ -36,7 +36,7 @@ const personSchema = {
   ],
   alumniOf: {
     "@type": "CollegeOrUniversity",
-    name: "Universitas Trunojoyo Madura",
+    name: "Universitas Trunodjoyo Madura",
     alternateName: "UTM",
     url: "https://www.trunojoyo.ac.id",
   },

@@ -162,7 +162,7 @@ const Contact = () => {
             <BorderBeam duration={16} borderWidth={1} className="opacity-30" />
 
             {/* Form label */}
-            <div className="flex items-center gap-2 mb-8">
+            <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full hue-cycle-bg" />
               <span className="text-xs font-mono text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">
                 Send a message

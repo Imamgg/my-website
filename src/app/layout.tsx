@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     template: "%s | Imamgg",
   },
   description:
-    "Portfolio Imamgg — Full-Stack Developer & Web3 Enthusiast. Mahasiswa Teknik Informatika Universitas Trunojoyo Madura yang berpengalaman dalam Next.js, Laravel, React, Node.js, dan teknologi blockchain. Lihat project, pengalaman, dan sertifikasi saya.",
+    "Portfolio Imamgg — Full-Stack Developer & Web3 Enthusiast. Mahasiswa Teknik Informatika Universitas Trunodjoyo Madura yang berpengalaman dalam Next.js, Laravel, React, Node.js, dan teknologi blockchain. Lihat project, pengalaman, dan sertifikasi saya.",
   keywords: [
     "Imamgg",
     "Imam Syafii",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     "React Developer",
     "Node.js Developer",
     "Teknik Informatika UTM",
-    "Universitas Trunojoyo Madura",
+    "Universitas Trunodjoyo Madura",
     "Web Developer Indonesia",
     "Blockchain Developer",
     "Frontend Developer",
