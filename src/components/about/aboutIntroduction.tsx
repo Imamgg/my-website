@@ -52,14 +52,14 @@ const AboutIntroduction = () => {
               <h2 className="text-3xl font-mono">
                 {`I'm a`}
                 <HyperText className="text-2xl py-0 md:text-3xl lg:text-4xl">
-                  Full-Stack Developer
+                  FULL-STACK & WEB3 ENTHUSIAST
                 </HyperText>
               </h2>
             </BoxReveal>
             <BoxReveal>
               <div className="text-lg leading-relaxed">
                 <TextReveal inline>
-                  {`I'm Imam Syafii, an Informatics Engineering student currently studying at University of Trunojoyo Madura. I have a strong interest and focus on modern web development, from intuitive user interfaces to scalable back-end systems. Furthermore, I'm actively exploring Web3 and am passionate about exploring various innovations within it, such as blockchain, NFTs, and decentralized applications (dApps). I'm interested in how these technologies have the potential to transform the way we interact digitally.`}
+                  {`I'm Imam Syafii, an Informatics Engineering student at Universitas Trunojoyo Madura. I have a strong focus on modern web development, from crafting intuitive user interfaces to building scalable back-end systems. Furthermore, I'm actively exploring Web3 and am passionate about discovering various innovations within it, such as blockchain, NFTs, and decentralized applications (dApps). I am deeply interested in how these technologies have the potential to transform the way we interact digitally.`}
                 </TextReveal>
               </div>
             </BoxReveal>
