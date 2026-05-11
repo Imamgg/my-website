@@ -94,6 +94,9 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  verification: {
+    google: "Xwd1bfeG7IO-LVSNvuHJCyeK09o0UnX9EWQiKCDPw5Q",
+  },
   category: "technology",
 };
 
