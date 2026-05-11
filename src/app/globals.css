@@ -299,8 +299,12 @@
 }
 
 .hue-cycle-text {
-  color: hsl(var(--hue-cycle), 70%, 55%);
+  color: hsl(var(--hue-cycle), 75%, 45%);
   animation: hue-cycle 6s linear infinite;
+}
+
+.dark .hue-cycle-text {
+  color: hsl(var(--hue-cycle), 70%, 60%);
 }
 
 @keyframes hue-cycle {
@@ -313,8 +317,37 @@
 }
 
 .hue-cycle-bg {
-  background-color: hsl(var(--hue-cycle), 70%, 55%);
+  background-color: hsl(var(--hue-cycle), 75%, 50%);
   animation: hue-cycle 6s linear infinite;
+}
+
+.dark .hue-cycle-bg {
+  background-color: hsl(var(--hue-cycle), 70%, 55%);
+}
+
+.hue-cycle-submit {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--hue-cycle), 75%, 48%),
+    hsl(calc(var(--hue-cycle) + 40), 75%, 52%)
+  );
+  animation: hue-cycle 6s linear infinite;
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+
+.dark .hue-cycle-submit {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--hue-cycle), 65%, 50%),
+    hsl(calc(var(--hue-cycle) + 40), 65%, 55%)
+  );
+}
+
+.hue-cycle-submit:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 8px 24px hsla(var(--hue-cycle), 70%, 50%, 0.25),
+    0 2px 8px hsla(var(--hue-cycle), 70%, 50%, 0.15);
 }
 
 .project-detail-enter {
@@ -359,8 +392,8 @@
   background-image: conic-gradient(
     from var(--border-beam-angle),
     transparent 0%,
-    hsl(var(--border-beam-hue), 80%, 60%) 5%,
-    hsl(calc(var(--border-beam-hue) + 60), 80%, 65%) 15%,
+    hsl(var(--border-beam-hue), 80%, 50%) 5%,
+    hsl(calc(var(--border-beam-hue) + 60), 80%, 55%) 15%,
     transparent 25%
   );
   background-origin: border-box;

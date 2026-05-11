@@ -203,7 +203,7 @@ const ContactForm = ({ onSubmit }: ContactFormProps) => {
           className={`w-full py-3.5 px-6 rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-all duration-300 ${
             isSubmitting
               ? "bg-zinc-200 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-600 cursor-not-allowed"
-              : "bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 active:scale-[0.98]"
+              : "hue-cycle-submit text-white active:scale-[0.97] shadow-lg shadow-black/10"
           }`}
         >
           {isSubmitting ? (
