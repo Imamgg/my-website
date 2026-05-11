@@ -1,6 +1,6 @@
 "use client";
 
-import { Iphone15Pro } from "../ui/iphone15Pro";
+// import { Iphone15Pro } from "../ui/iphone15Pro";
 import { Ripple } from "../ui/ripple";
 import { HeroContent } from "./heroContent";
 
@@ -21,10 +21,10 @@ const Hero = () => {
         profileImageAlt="Imam Syafii"
       />
       <Ripple />
-      <Iphone15Pro
+      {/* <Iphone15Pro
         className="absolute bottom-10 right-10 w-40 h-auto lg:block hidden"
         videoSrc="https://videos.pexels.com/video-files/9867271/9867271-uhd_2560_1440_24fps.mp4"
-      />
+      /> */}
     </section>
   );
 };
