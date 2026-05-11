@@ -312,6 +312,41 @@
   }
 }
 
+.hue-cycle-bg {
+  background-color: hsl(var(--hue-cycle), 70%, 55%);
+  animation: hue-cycle 6s linear infinite;
+}
+
+.project-detail-enter {
+  animation: project-fade-in 0.5s ease-out;
+}
+
+@keyframes project-fade-in {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.project-tag-enter {
+  animation: project-tag-pop 0.4s ease-out both;
+}
+
+@keyframes project-tag-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
 .border-beam-effect {
   border-width: var(--border-beam-width, 1.5px);
   border-style: solid;

@@ -13,19 +13,19 @@ export const socials: Social[] = [
     handle: "Imamgg",
   },
   {
-    name: "LinkedIn",
-    iconName: "linkedin",
-    href: "https://linkedin.com/in/imamgg",
-    handle: "Imam Syafii",
-  },
-  {
     name: "Instagram",
     iconName: "instagram",
     href: "https://instagram.com/0ximam",
     handle: "0ximam",
   },
   {
-    name: "Twitter / X",
+    name: "LinkedIn",
+    iconName: "linkedin",
+    href: "https://linkedin.com/in/imamgg",
+    handle: "Imam Syafii",
+  },
+  {
+    name: "X",
     iconName: "twitter",
     href: "https://x.com/404imam",
     handle: "Imamgg",
