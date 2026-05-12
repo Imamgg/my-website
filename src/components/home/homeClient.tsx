@@ -2,10 +2,9 @@
 
 import Preloader from "@/components/preloader/preloader";
 import { useState, useEffect } from "react";
-import { ScrollProgress } from "@/components/ui/background/scrollProgress";
 import Navbar from "@/components/navbar/navbar";
 import Hero from "@/components/hero/hero";
-import { AnimatedGridPattern } from "@/components/ui/background/animatedGridPattern";
+import { AnimatedGridPattern } from "@/components/ui/animatedGridPattern";
 import { cn } from "@/lib/utils";
 import About from "@/components/about/about";
 import Project from "@/components/project/project";
@@ -59,7 +58,6 @@ export default function HomeClient() {
       )}
       {!loadingPreloader && (
         <div className="h-full w-full bg-zinc-100 dark:bg-zinc-900">
-          <ScrollProgress />
           <Navbar />
           <main
             data-scroll-container

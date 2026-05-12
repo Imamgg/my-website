@@ -7,7 +7,6 @@ import { ArrowLeft, Award } from "lucide-react";
 import { SparklesText } from "@/components/ui/sparklesText";
 import CertificateGrid from "@/components/certificates/certificateGrid";
 import Navbar from "@/components/navbar/navbar";
-import { ScrollProgress } from "@/components/ui/background/scrollProgress";
 
 export default function CertificatesPageClient() {
   const headerRef = useRef<HTMLDivElement>(null);
@@ -38,7 +37,6 @@ export default function CertificatesPageClient() {
 
   return (
     <div className="min-h-screen bg-zinc-100 dark:bg-zinc-900">
-      <ScrollProgress />
       <Navbar />
 
       <main className="container mx-auto px-4 md:px-6 max-w-5xl pt-24 pb-20">

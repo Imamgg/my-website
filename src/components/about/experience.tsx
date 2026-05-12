@@ -12,7 +12,8 @@ import {
 } from "lucide-react";
 import AboutHeader from "./aboutHeader";
 import { experiences, ExperienceItem } from "@/data/experiences";
-import { BorderBeam } from "../ui/borderBeam";
+import ElectricBorder from "../ui/ElectricBorder";
+import { useTheme } from "next-themes";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -30,6 +31,9 @@ export function Experience() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isActive, setIsActive] = useState(false);
+  const { theme, systemTheme } = useTheme();
+  const currentTheme = theme === "system" ? systemTheme : theme;
+  const isDark = currentTheme === "dark";
 
   useEffect(() => {
     if (!sectionRef.current || !trackRef.current) return;
@@ -172,46 +176,50 @@ export function Experience() {
             className="h-scroll-card w-[85vw] md:w-[550px] lg:w-[600px] flex-shrink-0"
           >
             <div
-              className={`card-inner h-full p-6 md:p-8 rounded-3xl border border-zinc-200/50 dark:border-zinc-800/50 bg-white/80 dark:bg-zinc-900/70 backdrop-blur-sm transition-all duration-500 group relative overflow-hidden`}
+              className={`card-inner h-full transition-all duration-500 group relative`}
             >
-              <BorderBeam
-                duration={8}
-                delay={i * 2}
-                borderWidth={2}
-                className="opacity-60 group-hover:opacity-100 transition-opacity duration-500"
-              />
-              <span className="absolute -right-4 -top-8 text-[140px] font-black text-zinc-100 dark:text-zinc-800/50 select-none leading-none pointer-events-none">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-
-              <div className="relative z-10 flex flex-col h-full">
-                <div className="flex items-center justify-between mb-6">
-                  <div
-                    className="card-icon w-12 h-12 rounded-2xl border border-zinc-200 dark:border-zinc-700 flex items-center justify-center hue-cycle-text bg-zinc-50 dark:bg-zinc-800 group-hover:scale-110 transition-transform duration-300"
-                    style={{ animationDelay: `${i * 1.2}s` }}
-                  >
-                    {iconMap[exp.iconName]}
-                  </div>
-                  <span className="text-xs font-mono text-zinc-400 dark:text-zinc-500 tracking-wider bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded-full">
-                    {exp.date}
+              <ElectricBorder
+                color={isDark ? "#818cf8" : "#3b82f6"}
+                speed={1}
+                chaos={0.12}
+                borderRadius={24}
+                className="h-full"
+              >
+                <div className="h-full p-6 md:p-8 rounded-3xl border border-zinc-200/50 dark:border-zinc-800/50 bg-white/80 dark:bg-zinc-900/70 backdrop-blur-sm relative overflow-hidden">
+                  <span className="absolute -right-4 -top-8 text-[140px] font-black text-zinc-100 dark:text-zinc-800/50 select-none leading-none pointer-events-none">
+                    {String(i + 1).padStart(2, "0")}
                   </span>
+
+                  <div className="relative z-10 flex flex-col h-full">
+                    <div className="flex items-center justify-between mb-6">
+                      <div
+                        className="card-icon w-12 h-12 rounded-2xl border border-zinc-200 dark:border-zinc-700 flex items-center justify-center hue-cycle-text bg-zinc-50 dark:bg-zinc-800 group-hover:scale-110 transition-transform duration-300"
+                        style={{ animationDelay: `${i * 1.2}s` }}
+                      >
+                        {iconMap[exp.iconName]}
+                      </div>
+                      <span className="text-xs font-mono text-zinc-400 dark:text-zinc-500 tracking-wider bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded-full">
+                        {exp.date}
+                      </span>
+                    </div>
+
+                    <h3 className="text-xl md:text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-1 leading-tight">
+                      {exp.role}
+                    </h3>
+
+                    <p
+                      className="text-sm font-semibold hue-cycle-text mb-4"
+                      style={{ animationDelay: `${i * 1.2}s` }}
+                    >
+                      {exp.organization}
+                    </p>
+
+                    <p className="text-sm md:text-base leading-relaxed text-zinc-600 dark:text-zinc-300 flex-1">
+                      {exp.description}
+                    </p>
+                  </div>
                 </div>
-
-                <h3 className="text-xl md:text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-1 leading-tight">
-                  {exp.role}
-                </h3>
-
-                <p
-                  className="text-sm font-semibold hue-cycle-text mb-4"
-                  style={{ animationDelay: `${i * 1.2}s` }}
-                >
-                  {exp.organization}
-                </p>
-
-                <p className="text-sm md:text-base leading-relaxed text-zinc-600 dark:text-zinc-300 flex-1">
-                  {exp.description}
-                </p>
-              </div>
+              </ElectricBorder>
             </div>
           </div>
         ))}
