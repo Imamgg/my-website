@@ -64,7 +64,7 @@ const ContactHeader = () => {
       </div>
 
       <p className="contact-header-el text-base md:text-lg leading-relaxed text-zinc-500 dark:text-zinc-400 max-w-xl mx-auto mb-8">
-        Have an idea, a project, or just want to say hi? Drop me a message and I'll get back to you as soon as I can.
+        Have an idea, a project, or just want to say hi? Drop me a message and I&apos;ll get back to you as soon as I can.
       </p>
 
       {/* Quick info pills */}
