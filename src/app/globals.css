@@ -243,6 +243,69 @@
   }
 }
 
+.electric-border {
+  --electric-light-color: oklch(from var(--electric-border-color) l c h);
+  position: relative;
+  border-radius: inherit;
+  overflow: visible;
+  isolation: isolate;
+}
+
+.eb-canvas-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.eb-canvas {
+  display: block;
+}
+
+.eb-content {
+  position: relative;
+  border-radius: inherit;
+  z-index: 1;
+}
+
+.eb-layers {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.eb-glow-1,
+.eb-glow-2,
+.eb-background-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+.eb-glow-1 {
+  border: 2px solid oklch(from var(--electric-border-color) l c h / 0.6);
+  filter: blur(1px);
+}
+
+.eb-glow-2 {
+  border: 2px solid var(--electric-light-color);
+  filter: blur(4px);
+}
+
+.eb-background-glow {
+  z-index: -1;
+  transform: scale(1.1);
+  filter: blur(32px);
+  opacity: 0.3;
+  background: linear-gradient(-30deg, var(--electric-light-color), transparent, var(--electric-border-color));
+}
+
 .glass-container {
   background: rgba(244, 244, 245, 0.65);
   backdrop-filter: blur(20px) saturate(1.4);
@@ -311,6 +374,7 @@
   from {
     --hue-cycle: 0;
   }
+
   to {
     --hue-cycle: 360;
   }
@@ -326,21 +390,17 @@
 }
 
 .hue-cycle-submit {
-  background: linear-gradient(
-    135deg,
-    hsl(var(--hue-cycle), 75%, 48%),
-    hsl(calc(var(--hue-cycle) + 40), 75%, 52%)
-  );
+  background: linear-gradient(135deg,
+      hsl(var(--hue-cycle), 75%, 48%),
+      hsl(calc(var(--hue-cycle) + 40), 75%, 52%));
   animation: hue-cycle 6s linear infinite;
   transition: transform 0.2s, box-shadow 0.3s;
 }
 
 .dark .hue-cycle-submit {
-  background: linear-gradient(
-    135deg,
-    hsl(var(--hue-cycle), 65%, 50%),
-    hsl(calc(var(--hue-cycle) + 40), 65%, 55%)
-  );
+  background: linear-gradient(135deg,
+      hsl(var(--hue-cycle), 65%, 50%),
+      hsl(calc(var(--hue-cycle) + 40), 65%, 55%));
 }
 
 .hue-cycle-submit:hover {
@@ -359,6 +419,7 @@
     opacity: 0;
     transform: translateX(12px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -374,6 +435,7 @@
     opacity: 0;
     transform: scale(0.8) translateY(6px);
   }
+
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
@@ -389,13 +451,11 @@
     linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
-  background-image: conic-gradient(
-    from var(--border-beam-angle),
-    transparent 0%,
-    hsl(var(--border-beam-hue), 80%, 50%) 5%,
-    hsl(calc(var(--border-beam-hue) + 60), 80%, 55%) 15%,
-    transparent 25%
-  );
+  background-image: conic-gradient(from var(--border-beam-angle),
+      transparent 0%,
+      hsl(var(--border-beam-hue), 80%, 50%) 5%,
+      hsl(calc(var(--border-beam-hue) + 60), 80%, 55%) 15%,
+      transparent 25%);
   background-origin: border-box;
   background-clip: border-box;
   animation:
@@ -408,6 +468,7 @@
   from {
     --border-beam-angle: 0deg;
   }
+
   to {
     --border-beam-angle: 360deg;
   }
@@ -417,6 +478,7 @@
   from {
     --border-beam-hue: 0;
   }
+
   to {
     --border-beam-hue: 360;
   }
