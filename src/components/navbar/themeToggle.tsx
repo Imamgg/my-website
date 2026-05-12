@@ -2,7 +2,7 @@
 
 import { Sun, Moon } from "lucide-react";
 import { useTheme } from "next-themes";
-import MagneticEffect from "../providers/MagneticEffect";
+import MagneticEffect from "../providers/magneticEffect";
 
 export default function ThemeToggle() {
   const { theme, setTheme } = useTheme();

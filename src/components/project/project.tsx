@@ -1,6 +1,6 @@
-import BackgroundPattern from "./BackgroundPattern";
-import ProjectHeader from "./ProjectHeader";
-import ProjectList from "./ProjectList";
+import BackgroundPattern from "./backgroundPattern";
+import ProjectHeader from "./projectHeader";
+import ProjectList from "./projectList";
 
 const Projects = () => {
   return (

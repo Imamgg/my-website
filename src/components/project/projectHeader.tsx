@@ -44,8 +44,8 @@ const ProjectHeader = () => {
 
   return (
     <div ref={containerRef} className="mb-12 md:mb-16">
-      <div className="proj-header-el flex items-center gap-2.5 mb-5">
-        <Code className="w-5 h-5 text-blue-500" />
+      <div className="proj-header-el flex items-center gap-2 mb-6">
+        <Code size={16} className="hue-cycle-text" />
         <span className="text-sm text-zinc-500 dark:text-zinc-400 font-mono tracking-wider">
           ~/projects
         </span>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import MagneticEffect from "../providers/MagneticEffect";
+import MagneticEffect from "../providers/magneticEffect";
 import { cn } from "@/lib/utils";
 
 export interface NavItem {

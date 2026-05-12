@@ -1,6 +1,6 @@
 "use client";
 
-import Preloader from "@/components/preloader/Preloader";
+import Preloader from "@/components/preloader/preloader";
 import { useState, useEffect } from "react";
 import { ScrollProgress } from "@/components/ui/background/scrollProgress";
 import Navbar from "@/components/navbar/navbar";

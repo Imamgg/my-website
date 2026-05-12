@@ -136,7 +136,9 @@ export function Experience() {
       <div className="pt-10">
         <AboutHeader
           text="Experience"
-          className="flex items-center justify-center"
+          className="flex flex-col items-center justify-center"
+          breadcrumbText="~/experience"
+          breadcrumbIcon={<Briefcase size={16} className="hue-cycle-text" />}
         />
       </div>
 

@@ -8,6 +8,7 @@ import { useRef } from "react";
 import { SpinningText } from "../ui/spinningText";
 import confetti from "canvas-confetti";
 import AboutHeader from "./aboutHeader";
+import { User } from "lucide-react";
 
 const AboutIntroduction = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -44,7 +45,11 @@ const AboutIntroduction = () => {
 
   return (
     <>
-      <AboutHeader text="About Me" />
+      <AboutHeader 
+        text="About Me" 
+        breadcrumbText="~/about" 
+        breadcrumbIcon={<User size={16} className="hue-cycle-text" />} 
+      />
       <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 pb-10">
         <div className="space-y-8">
           <div className="space-y-2 md:space-y-4">
