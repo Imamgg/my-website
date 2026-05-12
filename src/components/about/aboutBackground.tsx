@@ -12,19 +12,21 @@ const AboutBackground = () => {
         numCopies={4}
         texts={["FULL-STACK DEV", "WEB3 ENTHUSIAST"]}
       />
-      <AnimatedGridPattern
-        numSquares={50}
-        maxOpacity={0.05}
-        duration={3}
-        width={60}
-        height={60}
-        repeatDelay={1}
-        className={cn(
-          "md:[mask-image:linear-gradient(to_bottom_left,white,transparent,transparent)] ",
-          "[mask-image:radial-gradient(400px_circle_at_center,white,transparent)]",
-          "inset-x-0 inset-y-[-30%] h-[200%] skew-y-12"
-        )}
-      />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <AnimatedGridPattern
+          numSquares={50}
+          maxOpacity={0.05}
+          duration={3}
+          width={60}
+          height={60}
+          repeatDelay={1}
+          className={cn(
+            "md:[mask-image:linear-gradient(to_bottom_left,white,transparent,transparent)] ",
+            "[mask-image:radial-gradient(400px_circle_at_center,white,transparent)]",
+            "inset-x-0 inset-y-[-30%] h-[200%] skew-y-12"
+          )}
+        />
+      </div>
     </>
   );
 };
