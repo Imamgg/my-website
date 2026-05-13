@@ -34,7 +34,7 @@ export const projects: Project[] = [
       "Personal portfolio with a code editor-inspired interface, interactive elements, and smooth animations for a personalized experience.",
     image: "/assets/projects/project2.webp",
     sourceCode: "https://github.com/Imamgg/next-porto",
-    demo: "https://imamgg-dev.vercel.app/",
+    demo: "https://imamgg-dev2.vercel.app/",
     tags: ["Next.js", "Tailwind CSS", "GSAP", "Framer Motion"],
   },
   {
