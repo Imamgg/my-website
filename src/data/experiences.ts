@@ -56,10 +56,10 @@ export const experiences: ExperienceItem[] = [
   },
   {
     role: "Training Division",
-    organization: "WARGALAB TIF UTM",
+    organization: "Wargalab TIF UTM",
     date: "Jul 2024 - Present",
     description:
-      "Member of the WARGALAB TIF Training division, an informatics engineering student association, which focuses on the development and delivery of practical training programs in the field of technology and informatics.",
+      "Member of the Wargalab TIF Training division, an informatics engineering student association, which focuses on the development and delivery of practical training programs in the field of technology and informatics.",
     iconName: "briefcase",
     color: "text-rose-500",
     borderColor: "border-rose-500/30 hover:border-rose-500/60",

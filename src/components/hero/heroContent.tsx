@@ -52,21 +52,21 @@ export const HeroContent: React.FC<HeroContentProps> = ({
 
         {/* Orbiting Tech Stack Icons */}
         <OrbitingCircles iconSize={48} radius={200} duration={25}>
-          <TechStackIcons.ubuntu />
           <TechStackIcons.css />
-          <TechStackIcons.typescript />
-          <TechStackIcons.github />
+          <TechStackIcons.tailwind />
+          <TechStackIcons.python />
           <TechStackIcons.nodejs />
-          <TechStackIcons.react />
           <TechStackIcons.javascript />
+          <TechStackIcons.typescript />
+          <TechStackIcons.react />
           <TechStackIcons.php />
         </OrbitingCircles>
 
         {/* Inner orbit with smaller radius */}
         <OrbitingCircles iconSize={36} radius={120} duration={20} reverse>
           <TechStackIcons.laravel />
-          <TechStackIcons.vscode />
-          <TechStackIcons.tailwind />
+          <TechStackIcons.linux />
+          <TechStackIcons.docker />
           <TechStackIcons.nextjs />
         </OrbitingCircles>
       </div>
