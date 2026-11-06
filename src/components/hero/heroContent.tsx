@@ -77,7 +77,7 @@ export const HeroContent: React.FC<HeroContentProps> = ({
       ></div>
       <div
         ref={stageRef}
-        className="relative flex h-[600px] w-full origin-center scale-[0.62] flex-col items-center justify-center overflow-hidden min-[480px]:scale-75 sm:scale-90 lg:scale-100"
+        className="relative flex h-[600px] w-full origin-center scale-[0.62] flex-col items-center justify-center min-[480px]:scale-75 sm:scale-90 lg:scale-100"
       >
         <div
           ref={profileRef}
