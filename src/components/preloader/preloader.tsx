@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import { prefersReducedMotion } from "@/lib/reducedMotion";
 
 interface PreloaderProps {
   onComplete: () => void;
@@ -16,6 +17,13 @@ type Direction = "UP" | "DOWN" | "LEFT" | "RIGHT";
 
 const CELL_SIZE = 20;
 const SNAKE_SPEED = 100;
+// Failsafe: never trap the visitor in the splash, even if the snake stalls.
+const MAX_SPLASH_MS = 12_000;
+// Food spawns at a middle distance from the head (Manhattan cells):
+// close enough to reach in a short run, far enough to need steering.
+const SPAWN_RADIUS = 20;
+const SPAWN_MIN_DISTANCE = 8;
+const EXIT_MS = 500; // exit faster than entrance (animate.md)
 const INITIAL_SNAKE_LENGTH = 4;
 
 const Preloader: React.FC<PreloaderProps> = ({
@@ -36,6 +44,10 @@ const Preloader: React.FC<PreloaderProps> = ({
   const completedRef = useRef(false);
   const [collected, setCollected] = useState(0);
   const [fadingOut, setFadingOut] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const [coarsePointer, setCoarsePointer] = useState(false);
+  const completeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const failsafeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const touchStartRef = useRef<Point | null>(null);
 
   const spawnFood = useCallback(() => {
@@ -43,19 +55,44 @@ const Preloader: React.FC<PreloaderProps> = ({
     const rows = gridRowsRef.current;
     if (cols === 0 || rows === 0) return;
 
-    let pos: Point;
+    const head = snakeRef.current[0];
+    // Spawn near the head so the next bite is always a short run,
+    // not a cross-map trip. Radius scales down on small grids.
+    const radius = Math.max(6, Math.min(SPAWN_RADIUS, cols, rows));
+    const minDistance = Math.min(SPAWN_MIN_DISTANCE, Math.floor(radius / 2));
+    const distance = (a: Point, b: Point) =>
+      Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+
+    let best: Point | null = null;
+    let bestDistance = Infinity;
     let attempts = 0;
-    do {
-      pos = {
-        x: Math.floor(Math.random() * cols),
-        y: Math.floor(Math.random() * rows),
+
+    // Sample nearby cells; keep the closest valid one as fallback.
+    while (attempts < 200) {
+      const angle = Math.random() * Math.PI * 2;
+      const dist =
+        minDistance + Math.random() * Math.max(1, radius - minDistance);
+      const pos: Point = {
+        x: Math.round(head.x + Math.cos(angle) * dist),
+        y: Math.round(head.y + Math.sin(angle) * dist),
       };
       attempts++;
-    } while (
-      snakeRef.current.some((s) => s.x === pos.x && s.y === pos.y) &&
-      attempts < 100
-    );
-    foodRef.current = pos;
+
+      if (pos.x < 0 || pos.x >= cols || pos.y < 0 || pos.y >= rows) continue;
+      if (snakeRef.current.some((s) => s.x === pos.x && s.y === pos.y)) continue;
+
+      const d = distance(pos, head);
+      if (d <= radius) {
+        foodRef.current = pos;
+        return;
+      }
+      if (d < bestDistance) {
+        best = pos;
+        bestDistance = d;
+      }
+    }
+
+    if (best) foodRef.current = best;
   }, []);
 
   const getAutoPilotDirection = useCallback((): Direction => {
@@ -247,6 +284,15 @@ const Preloader: React.FC<PreloaderProps> = ({
     animFrameRef.current = requestAnimationFrame(drawGame);
   }, []);
 
+  const complete = useCallback(() => {
+    if (completedRef.current) return;
+    completedRef.current = true;
+    setFadingOut(true);
+    completeTimerRef.current = setTimeout(() => {
+      onComplete();
+    }, EXIT_MS);
+  }, [onComplete]);
+
   const moveSnake = useCallback(() => {
     if (completedRef.current) return;
 
@@ -306,23 +352,73 @@ const Preloader: React.FC<PreloaderProps> = ({
       setCollected(collectedRef.current);
 
       if (collectedRef.current >= foodCount) {
-        completedRef.current = true;
-        setFadingOut(true);
-        setTimeout(() => {
-          onComplete();
-        }, 800);
+        complete();
         return;
       }
       spawnFood();
     } else {
       snake.pop();
     }
-  }, [foodCount, onComplete, spawnFood, getAutoPilotDirection]);
+  }, [foodCount, complete, spawnFood, getAutoPilotDirection]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
     if (!canvas || !container) return;
+
+    const reduced = prefersReducedMotion();
+    setReducedMotion(reduced);
+    setCoarsePointer(
+      typeof window !== "undefined" &&
+        typeof window.matchMedia === "function" &&
+        window.matchMedia("(pointer: coarse)").matches
+    );
+
+    // Failsafe: the splash never outlives MAX_SPLASH_MS.
+    failsafeTimerRef.current = setTimeout(() => complete(), MAX_SPLASH_MS);
+
+    // Reduced motion: no game, no spatial movement — progress fills and exits.
+    if (reduced) {
+      const step = Math.max(1, Math.floor(foodCount / 3));
+      let n = 0;
+      const tick = setInterval(() => {
+        n += step;
+        if (n >= foodCount) {
+          clearInterval(tick);
+          setCollected(foodCount);
+          complete();
+        } else {
+          setCollected(n);
+        }
+      }, 150);
+      return () => {
+        clearInterval(tick);
+        if (failsafeTimerRef.current) clearTimeout(failsafeTimerRef.current);
+        if (completeTimerRef.current) clearTimeout(completeTimerRef.current);
+      };
+    }
+
+    let paused = false;
+    const startLoops = () => {
+      if (gameLoopRef.current) clearInterval(gameLoopRef.current);
+      gameLoopRef.current = setInterval(moveSnake, SNAKE_SPEED);
+      animFrameRef.current = requestAnimationFrame(drawGame);
+    };
+    const stopLoops = () => {
+      if (gameLoopRef.current) clearInterval(gameLoopRef.current);
+      cancelAnimationFrame(animFrameRef.current);
+    };
+    const handleVisibility = () => {
+      // Nonessential loop stops when hidden (animate.md).
+      if (document.hidden && !paused) {
+        paused = true;
+        stopLoops();
+      } else if (!document.hidden && paused) {
+        paused = false;
+        startLoops();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
 
     const resize = () => {
       const w = window.innerWidth;
@@ -352,8 +448,7 @@ const Preloader: React.FC<PreloaderProps> = ({
     setCollected(0);
     spawnFood();
 
-    gameLoopRef.current = setInterval(moveSnake, SNAKE_SPEED);
-    animFrameRef.current = requestAnimationFrame(drawGame);
+    startLoops();
 
     const handleKey = (e: KeyboardEvent) => {
       const current = directionRef.current;
@@ -429,37 +524,75 @@ const Preloader: React.FC<PreloaderProps> = ({
       window.removeEventListener("keydown", handleKey);
       window.removeEventListener("touchstart", handleTouchStart);
       window.removeEventListener("touchend", handleTouchEnd);
+      document.removeEventListener("visibilitychange", handleVisibility);
       if (gameLoopRef.current) clearInterval(gameLoopRef.current);
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+      if (failsafeTimerRef.current) clearTimeout(failsafeTimerRef.current);
+      if (completeTimerRef.current) clearTimeout(completeTimerRef.current);
     };
-  }, [spawnFood, moveSnake, drawGame]);
+  }, [spawnFood, moveSnake, drawGame, complete]);
+
+  const progress = Math.round((collected / foodCount) * 100);
+  const done = collected >= foodCount;
 
   return (
     <div
       ref={containerRef}
-      className={`absolute inset-0 z-50 transition-opacity duration-700 ${fadingOut ? "opacity-0" : "opacity-100"}`}
+      role="progressbar"
+      aria-valuenow={progress}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-label="Loading portfolio"
+      className={`absolute inset-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        fadingOut ? "opacity-0 scale-[1.02]" : "opacity-100 scale-100"
+      }`}
     >
-      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
+      <canvas
+        ref={canvasRef}
+        aria-hidden="true"
+        className="absolute inset-0 w-full h-full"
+      />
 
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-10">
-        <div className="flex items-center gap-2 px-4 py-2 rounded-full glass-container">
+      {/* Skip — name the action, keep it reachable by keyboard. */}
+      <button
+        type="button"
+        onClick={() => complete()}
+        className="absolute top-6 right-6 z-20 min-h-11 px-4 py-2 rounded-full glass-container text-sm font-medium text-zinc-200 hover:text-white transition-colors duration-200 focus-visible:outline-none"
+      >
+        Skip intro
+      </button>
+
+      {/* HUD — progress is the state, not decoration. */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-[min(20rem,80vw)] flex flex-col items-center gap-3 z-10">
+        <div
+          aria-hidden="true"
+          className="flex w-full gap-1.5"
+        >
           {Array.from({ length: foodCount }).map((_, i) => (
             <div
               key={i}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                i < collected
-                  ? "bg-blue-500 shadow-md shadow-blue-500/50 scale-110"
-                  : "bg-zinc-600/50 scale-90"
+              className={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${
+                i < collected ? "bg-blue-500" : "bg-zinc-700/60"
               }`}
             />
           ))}
         </div>
 
-        <p className="text-zinc-500 text-xs tracking-wider uppercase font-mono">
-          {collected < foodCount
-            ? "Use arrow keys or swipe to play"
-            : "Loading..."}
-        </p>
+        <div aria-live="polite" className="flex items-center gap-3">
+          <span className="text-sm font-mono tabular-nums text-zinc-300">
+            {progress}%
+          </span>
+          <span className="text-zinc-600">·</span>
+          <p className="text-xs tracking-wider uppercase font-mono text-zinc-400">
+            {done
+              ? "Loading..."
+              : reducedMotion
+                ? "Loading portfolio"
+                : coarsePointer
+                  ? "Swipe to steer the snake"
+                  : "Arrow keys or WASD to steer — or just watch"}
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -6,13 +6,14 @@ import Link from "next/link";
 import { ArrowLeft, Award } from "lucide-react";
 import { SparklesText } from "@/components/ui/sparklesText";
 import CertificateGrid from "@/components/certificates/certificateGrid";
+import { prefersReducedMotion } from "@/lib/reducedMotion";
 import Navbar from "@/components/navbar/navbar";
 
 export default function CertificatesPageClient() {
   const headerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!headerRef.current) return;
+    if (!headerRef.current || prefersReducedMotion()) return;
 
     const ctx = gsap.context(() => {
       const els = headerRef.current?.querySelectorAll(".cert-page-el");

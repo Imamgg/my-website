@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { projects, Project } from "@/data/projects";
 import { BorderBeam } from "../ui/borderBeam";
+import { prefersReducedMotion } from "@/lib/reducedMotion";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -33,7 +34,7 @@ const ProjectList = () => {
   const [isHovering, setIsHovering] = useState(false);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || prefersReducedMotion()) return;
 
     const ctx = gsap.context(() => {
       gsap.fromTo(
@@ -82,7 +83,7 @@ const ProjectList = () => {
 
   // Mouse tilt on the card deck
   const handleMouseMove = (e: ReactMouseEvent<HTMLDivElement>) => {
-    if (!cardDeckRef.current) return;
+    if (!cardDeckRef.current || prefersReducedMotion()) return;
     const rect = cardDeckRef.current.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
     const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;

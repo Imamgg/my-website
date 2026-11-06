@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Code } from "lucide-react";
 import { SparklesText } from "../ui/sparklesText";
+import { prefersReducedMotion } from "@/lib/reducedMotion";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -14,7 +15,7 @@ const ProjectHeader = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || prefersReducedMotion()) return;
 
     const ctx = gsap.context(() => {
       const els = containerRef.current?.querySelectorAll(".proj-header-el");

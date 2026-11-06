@@ -5,15 +5,21 @@ import { Code2 } from "lucide-react";
 import { useIsomorphicLayoutEffect } from "motion/react";
 import Link from "next/link";
 import { useRef } from "react";
+import { prefersReducedMotion } from "@/lib/reducedMotion";
 
 export default function NavHome() {
   const el = useRef<HTMLDivElement | null>(null);
 
   useIsomorphicLayoutEffect(() => {
-    gsap.context(() => {
-      const tl = gsap.timeline({ delay: 0.5 });
-      tl.to(el.current, { x: 0, duration: 2, ease: "power4.inOut" }, 0);
+    if (prefersReducedMotion()) {
+      gsap.set(el.current, { x: 0 });
+      return;
+    }
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ delay: 0.2 });
+      tl.to(el.current, { x: 0, duration: 0.6, ease: "expo.out" }, 0);
     }, el);
+    return () => ctx.revert();
   }, []);
 
   return (

@@ -19,6 +19,7 @@ import {
 import Link from "next/link";
 import { socials, contactEmail, Social } from "@/data/socials";
 import { BorderBeam } from "../ui/borderBeam";
+import { prefersReducedMotion } from "@/lib/reducedMotion";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -42,7 +43,7 @@ const Contact = () => {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || prefersReducedMotion()) return;
 
     const ctx = gsap.context(() => {
       const els = containerRef.current?.querySelectorAll(".contact-animate");

@@ -10,6 +10,7 @@ import NavSidebarItem from "./navSidebarItem";
 import NavSidebarItemMobile from "./navSidebarItemMobile";
 import ThemeToggle from "./themeToggle";
 import type { NavItem } from "./navSidebarItem";
+import { prefersReducedMotion } from "@/lib/reducedMotion";
 
 export default function NavSidebar() {
   const router = useRouter();
@@ -57,6 +58,7 @@ export default function NavSidebar() {
 
   useIsomorphicLayoutEffect(() => {
     if (!sidebarRef.current) return;
+    if (prefersReducedMotion()) return;
 
     const ctx = gsap.context(() => {
       const items = sidebarRef.current?.querySelectorAll(".nav-sidebar-item");
@@ -133,7 +135,7 @@ export default function NavSidebar() {
         gsap.to(navItemsRef.current, {
           height: "auto",
           opacity: 1,
-          duration: 0.4,
+          duration: prefersReducedMotion() ? 0 : 0.4,
           ease: "power3.out",
         });
 
@@ -145,8 +147,8 @@ export default function NavSidebar() {
               {
                 x: 0,
                 opacity: 1,
-                duration: 0.35,
-                delay: i * 0.06,
+                duration: prefersReducedMotion() ? 0 : 0.35,
+                delay: prefersReducedMotion() ? 0 : i * 0.06,
                 ease: "back.out(1.5)",
               }
             );
@@ -158,7 +160,7 @@ export default function NavSidebar() {
             gsap.to(item, {
               x: 20,
               opacity: 0,
-              duration: 0.2,
+              duration: prefersReducedMotion() ? 0 : 0.2,
               ease: "power2.in",
             });
           });
@@ -166,8 +168,8 @@ export default function NavSidebar() {
         gsap.to(navItemsRef.current, {
           height: 0,
           opacity: 0,
-          duration: 0.3,
-          delay: 0.1,
+          duration: prefersReducedMotion() ? 0 : 0.3,
+          delay: prefersReducedMotion() ? 0 : 0.1,
           ease: "power3.in",
         });
       }
@@ -184,7 +186,7 @@ export default function NavSidebar() {
         sessionStorage.setItem("scrollTarget", target);
         router.push("/");
       } else if (scroll) {
-        scroll.scrollTo(target, { duration: 2 });
+        scroll.scrollTo(target, { duration: prefersReducedMotion() ? 0 : 1.2 });
       }
       setActiveSection(target);
     }

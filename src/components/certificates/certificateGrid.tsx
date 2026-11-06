@@ -9,6 +9,7 @@ import { ExternalLink, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { certificates, Certificate } from "@/data/certificates";
 import { motion, AnimatePresence } from "motion/react";
 import SpotlightCard from "../ui/SpotlightCard";
+import { prefersReducedMotion } from "@/lib/reducedMotion";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -20,7 +21,7 @@ export default function CertificateGrid() {
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || prefersReducedMotion()) return;
 
     const ctx = gsap.context(() => {
       const cards = containerRef.current?.querySelectorAll(".cert-card");
@@ -116,7 +117,7 @@ export default function CertificateGrid() {
       >
         {certificates.map((cert, i) => (
           <div
-            key={`${cert.title}-${cert.date}`}
+            key={cert.image}
             className="cert-card"
           >
             <SpotlightCard

@@ -14,6 +14,7 @@ import AboutHeader from "./aboutHeader";
 import { experiences, ExperienceItem } from "@/data/experiences";
 import ElectricBorder from "../ui/ElectricBorder";
 import { useTheme } from "next-themes";
+import { prefersReducedMotion } from "@/lib/reducedMotion";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -31,12 +32,17 @@ export function Experience() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isActive, setIsActive] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
   const { theme, systemTheme } = useTheme();
   const currentTheme = theme === "system" ? systemTheme : theme;
   const isDark = currentTheme === "dark";
 
   useEffect(() => {
     if (!sectionRef.current || !trackRef.current) return;
+    if (prefersReducedMotion()) {
+      setReducedMotion(true);
+      return;
+    }
 
     const cards = trackRef.current.querySelectorAll(".h-scroll-card");
     const totalScroll = trackRef.current.scrollWidth - window.innerWidth;
@@ -136,7 +142,7 @@ export function Experience() {
   }, []);
 
   return (
-    <div ref={sectionRef} className="relative min-h-screen overflow-x-hidden">
+    <div ref={sectionRef} className={`relative min-h-screen ${reducedMotion ? "overflow-x-visible" : "overflow-x-hidden"}`}>
       <div className="pt-10">
         <AboutHeader
           text="Experience"
@@ -169,7 +175,7 @@ export function Experience() {
         <ChevronRight size={14} className="text-zinc-400 animate-pulse" />
       </div>
 
-      <div ref={trackRef} className="flex gap-6 md:gap-8 px-8 md:px-16 py-12 w-max">
+      <div ref={trackRef} className={`flex gap-6 md:gap-8 px-8 md:px-16 py-12 w-max ${reducedMotion ? "overflow-x-auto max-w-full snap-x" : ""}`}>
         {experiences.map((exp, i) => (
           <div
             key={`${exp.role}-${exp.date}`}

@@ -30,6 +30,7 @@ export function OrbitingCircles({
     <>
       {path && (
         <svg
+          aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
           version="1.1"
           className="pointer-events-none absolute inset-0 size-full"
@@ -56,7 +57,7 @@ export function OrbitingCircles({
               } as React.CSSProperties
             }
             className={cn(
-              `absolute flex size-[var(--icon-size)] transform-gpu animate-orbit items-center justify-center rounded-full`,
+              `absolute flex size-[var(--icon-size)] transform-gpu motion-safe:animate-orbit items-center justify-center rounded-full`,
               { "[animation-direction:reverse]": reverse },
               className
             )}

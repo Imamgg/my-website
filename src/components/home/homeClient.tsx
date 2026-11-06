@@ -2,6 +2,7 @@
 
 import Preloader from "@/components/preloader/preloader";
 import { useState, useEffect } from "react";
+import { useIsomorphicLayoutEffect } from "motion/react";
 import Navbar from "@/components/navbar/navbar";
 import Hero from "@/components/hero/hero";
 import { AnimatedGridPattern } from "@/components/ui/animatedGridPattern";
@@ -9,11 +10,16 @@ import { cn } from "@/lib/utils";
 import About from "@/components/about/about";
 import Project from "@/components/project/project";
 import Contact from "@/components/contact/contact";
+import { prefersReducedMotion } from "@/lib/reducedMotion";
 
 export default function HomeClient() {
   const [loadingPreloader, setLoadingPreloader] = useState(true);
 
-  useEffect(() => {
+  // useLayoutEffect (not useEffect): hides the splash BEFORE the browser
+  // paints, so returning from /certificates never flashes the preloader.
+  // Server and first client render both show the splash (no hydration
+  // mismatch); the layout effect swaps it out before first paint.
+  useIsomorphicLayoutEffect(() => {
     if (sessionStorage.getItem("preloaderDone")) {
       setLoadingPreloader(false);
     }
@@ -33,7 +39,7 @@ export default function HomeClient() {
       setTimeout(() => {
         const el = document.querySelector(target);
         if (el) {
-          el.scrollIntoView({ behavior: "smooth" });
+          el.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth" });
         }
       }, 500);
     }
@@ -42,7 +48,7 @@ export default function HomeClient() {
   return (
     <>
       {loadingPreloader && (
-        <div className="relative w-full h-screen bg-black flex items-center justify-center overflow-hidden">
+        <div className="relative w-full h-dvh bg-black flex items-center justify-center overflow-hidden">
           <AnimatedGridPattern
             numSquares={30}
             maxOpacity={0.1}
