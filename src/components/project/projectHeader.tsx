@@ -47,7 +47,7 @@ const ProjectHeader = () => {
     <div ref={containerRef} className="mb-12 md:mb-16">
       <div className="proj-header-el flex items-center gap-2 mb-6">
         <Code size={16} className="hue-cycle-text" />
-        <span className="text-sm text-zinc-500 dark:text-zinc-400 font-mono tracking-wider">
+        <span className="text-sm text-muted-foreground font-mono tracking-wider">
           ~/projects
         </span>
       </div>
@@ -62,7 +62,7 @@ const ProjectHeader = () => {
         </SparklesText>
       </div>
 
-      <p className="proj-header-el mt-6 max-w-lg text-base leading-relaxed text-zinc-500 dark:text-zinc-400">
+      <p className="proj-header-el mt-6 max-w-lg text-base leading-relaxed text-muted-foreground">
         {`Things I've built with care - from full-stack apps to creative experiments.`}
       </p>
     </div>

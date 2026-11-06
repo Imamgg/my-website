@@ -59,7 +59,7 @@ export default function ThemeToggle() {
         aria-label="Toggle Theme"
         type="button"
         onClick={toggleTheme}
-        className="flex items-center justify-center w-10 h-10 rounded-full glass-container text-zinc-500 dark:text-zinc-400 hover:text-amber-500 dark:hover:text-blue-400 transition-all duration-300 hover:scale-110 shadow-lg shadow-black/10 dark:shadow-black/20 group"
+        className="flex items-center justify-center w-10 h-10 rounded-full glass-container text-muted-foreground hover:text-brand transition-all duration-300 hover:scale-110 shadow-lg shadow-black/10 dark:shadow-black/20 group"
       >
         <span className="transition-transform duration-500 group-hover:rotate-180">
           {mounted ? (

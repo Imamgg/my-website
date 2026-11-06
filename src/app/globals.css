@@ -25,6 +25,8 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -160,7 +162,7 @@
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --muted-foreground: oklch(0.52 0 0);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
@@ -180,6 +182,8 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --brand: oklch(0.623 0.214 259.815);
+  --brand-foreground: oklch(0.985 0 0);
 }
 
 .dark {
@@ -214,6 +218,8 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --brand: oklch(0.682 0.17 250.12);
+  --brand-foreground: oklch(0.985 0 0);
 }
 
 /* === View Transition: Dark Mode Diamond Reveal === */
@@ -289,7 +295,7 @@ html {
   }
 
   body {
-    @apply bg-gradient-to-br from-slate-100 via-blue-50/50 to-white text-foreground;
+    @apply bg-gradient-to-br from-background via-background to-muted text-foreground;
   }
 
   /* Custom scrollbar — theme-aware, contrast on both themes */
@@ -409,10 +415,10 @@ html {
 }
 
 .glass-container {
-  background: rgba(244, 244, 245, 0.65);
+  background: color-mix(in oklch, var(--card) 65%, transparent);
   backdrop-filter: blur(20px) saturate(1.4);
   -webkit-backdrop-filter: blur(20px) saturate(1.4);
-  border: 1px solid rgba(191, 219, 254, 0.5);
+  border: 1px solid var(--border);
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.8),
@@ -420,8 +426,8 @@ html {
 }
 
 .dark .glass-container {
-  background: rgba(24, 24, 27, 0.75);
-  border-color: rgba(30, 58, 138, 0.35);
+  background: color-mix(in oklch, var(--card) 75%, transparent);
+  border-color: var(--border);
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.04),
@@ -429,10 +435,10 @@ html {
 }
 
 .glass-tooltip {
-  background: rgba(244, 244, 245, 0.9);
+  background: color-mix(in oklch, var(--card) 90%, transparent);
   backdrop-filter: blur(16px) saturate(1.3);
   -webkit-backdrop-filter: blur(16px) saturate(1.3);
-  border: 1px solid rgba(191, 219, 254, 0.5);
+  border: 1px solid var(--border);
   box-shadow:
     0 4px 16px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.7);
@@ -440,8 +446,8 @@ html {
 }
 
 .dark .glass-tooltip {
-  background: rgba(24, 24, 27, 0.92);
-  border-color: rgba(30, 58, 138, 0.3);
+  background: color-mix(in oklch, var(--card) 92%, transparent);
+  border-color: var(--border);
   color: #e4e4e7;
 }
 

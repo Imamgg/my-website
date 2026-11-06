@@ -37,7 +37,7 @@ export default function CertificatesPageClient() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-zinc-100 dark:bg-zinc-900">
+    <div className="min-h-screen bg-background">
       <Navbar />
 
       <main className="container mx-auto px-4 md:px-6 max-w-5xl pt-24 pb-20">
@@ -45,7 +45,7 @@ export default function CertificatesPageClient() {
           <div className="cert-page-el mb-8">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-300 group"
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-brand transition-colors duration-300 group"
             >
               <ArrowLeft
                 size={16}
@@ -56,8 +56,8 @@ export default function CertificatesPageClient() {
           </div>
 
           <div className="cert-page-el flex items-center gap-2.5 mb-5">
-            <Award className="w-5 h-5 text-blue-500" />
-            <span className="text-sm text-zinc-500 dark:text-zinc-400 font-mono tracking-wider">
+            <Award className="w-5 h-5 text-brand" />
+            <span className="text-sm text-muted-foreground font-mono tracking-wider">
               ~/certificates
             </span>
           </div>
@@ -72,7 +72,7 @@ export default function CertificatesPageClient() {
             </SparklesText>
           </div>
 
-          <p className="cert-page-el text-base leading-relaxed text-zinc-500 dark:text-zinc-400 max-w-xl mb-12">
+          <p className="cert-page-el text-base leading-relaxed text-muted-foreground max-w-xl mb-12">
             A collection of certifications and achievements from various courses
             and programs.
           </p>

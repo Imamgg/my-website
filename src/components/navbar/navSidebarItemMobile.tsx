@@ -11,8 +11,8 @@ export default function NavSidebarItemMobile({ item, isActive, onClick }: NavSid
         className={cn(
           "relative flex items-center justify-center w-10 h-10 rounded-full transition-all duration-300 group active:scale-95",
           isActive
-            ? "bg-blue-500/30 dark:bg-blue-500/40 text-blue-700 dark:text-white shadow-lg shadow-blue-500/15 dark:shadow-blue-500/20 scale-105 border border-blue-400/50 dark:border-blue-400/40"
-            : "bg-zinc-300/40 dark:bg-white/5 text-zinc-600 dark:text-zinc-400 hover:text-blue-600 dark:hover:text-white hover:bg-blue-100/50 dark:hover:bg-white/15 border border-transparent hover:border-blue-200/50 dark:hover:border-white/10"
+            ? "bg-brand/30 text-brand dark:text-white shadow-lg shadow-brand/15 dark:shadow-brand/20 scale-105 border border-brand/50"
+            : "bg-muted/40 text-muted-foreground hover:text-brand dark:hover:text-foreground hover:bg-brand/10 border border-transparent hover:border-brand/50 dark:hover:border-white/10"
         )}
         aria-label={item.label}
       >
@@ -21,7 +21,7 @@ export default function NavSidebarItemMobile({ item, isActive, onClick }: NavSid
         </span>
 
         {isActive && (
-          <span className="absolute -left-1 w-1.5 h-1.5 rounded-full bg-blue-500 dark:bg-blue-400 shadow-sm shadow-blue-500/50 dark:shadow-blue-400/50 animate-pulse"></span>
+          <span className="absolute -left-1 w-1.5 h-1.5 rounded-full bg-brand shadow-sm shadow-brand/50 animate-pulse"></span>
         )}
       </button>
     </div>

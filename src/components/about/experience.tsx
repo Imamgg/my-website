@@ -158,21 +158,21 @@ export function Experience() {
             key={i}
             className={`w-2 rounded-full transition-all duration-500 ${i === activeIndex
               ? `h-6 ${exp.color.replace("text-", "bg-")}`
-              : "h-2 bg-zinc-300 dark:bg-zinc-700"
+              : "h-2 bg-muted-foreground/30"
               }`}
           />
         ))}
       </div>
 
       <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-50 hidden md:flex items-center gap-3 px-5 py-2.5 rounded-full glass-container transition-all duration-500 ${isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
-        <span className="text-xs font-mono text-zinc-400 dark:text-zinc-500">
+        <span className="text-xs font-mono text-muted-foreground">
           {String(activeIndex + 1).padStart(2, "0")} / {String(experiences.length).padStart(2, "0")}
         </span>
-        <div className="w-px h-4 bg-zinc-300 dark:bg-zinc-700" />
-        <span className="text-sm font-medium text-zinc-700 dark:text-zinc-200 max-w-[200px] truncate">
+        <div className="w-px h-4 bg-muted-foreground/30" />
+        <span className="text-sm font-medium text-foreground max-w-[200px] truncate">
           {experiences[activeIndex]?.role}
         </span>
-        <ChevronRight size={14} className="text-zinc-400 animate-pulse" />
+        <ChevronRight size={14} className="text-muted-foreground animate-pulse" />
       </div>
 
       <div ref={trackRef} className={`flex gap-6 md:gap-8 px-8 md:px-16 py-12 w-max ${reducedMotion ? "overflow-x-auto max-w-full snap-x" : ""}`}>
@@ -191,25 +191,25 @@ export function Experience() {
                 borderRadius={24}
                 className="h-full"
               >
-                <div className="h-full p-6 md:p-8 rounded-3xl border border-zinc-200/50 dark:border-zinc-800/50 bg-white/80 dark:bg-zinc-900/70 backdrop-blur-sm relative overflow-hidden">
-                  <span className="absolute -right-4 -top-8 text-[140px] font-black text-zinc-100 dark:text-zinc-800/50 select-none leading-none pointer-events-none">
+                <div className="h-full p-6 md:p-8 rounded-3xl border border-border/50 bg-card/80 backdrop-blur-sm relative overflow-hidden">
+                  <span className="absolute -right-4 -top-8 text-[140px] font-black text-muted-foreground/10 select-none leading-none pointer-events-none">
                     {String(i + 1).padStart(2, "0")}
                   </span>
 
                   <div className="relative z-10 flex flex-col h-full">
                     <div className="flex items-center justify-between mb-6">
                       <div
-                        className="card-icon w-12 h-12 rounded-2xl border border-zinc-200 dark:border-zinc-700 flex items-center justify-center hue-cycle-text bg-zinc-50 dark:bg-zinc-800 group-hover:scale-110 transition-transform duration-300"
+                        className="card-icon w-12 h-12 rounded-2xl border border-border flex items-center justify-center hue-cycle-text bg-muted group-hover:scale-110 transition-transform duration-300"
                         style={{ animationDelay: `${i * 1.2}s` }}
                       >
                         {iconMap[exp.iconName]}
                       </div>
-                      <span className="text-xs font-mono text-zinc-400 dark:text-zinc-500 tracking-wider bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded-full">
+                      <span className="text-xs font-mono text-muted-foreground tracking-wider bg-muted px-3 py-1 rounded-full">
                         {exp.date}
                       </span>
                     </div>
 
-                    <h3 className="text-xl md:text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-1 leading-tight">
+                    <h3 className="text-xl md:text-2xl font-bold text-foreground mb-1 leading-tight">
                       {exp.role}
                     </h3>
 
@@ -220,7 +220,7 @@ export function Experience() {
                       {exp.organization}
                     </p>
 
-                    <p className="text-sm md:text-base leading-relaxed text-zinc-600 dark:text-zinc-300 flex-1">
+                    <p className="text-sm md:text-base leading-relaxed text-muted-foreground flex-1">
                       {exp.description}
                     </p>
                   </div>

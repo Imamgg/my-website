@@ -110,13 +110,13 @@ const ContactForm = ({ onSubmit }: ContactFormProps) => {
   };
 
   const inputBase =
-    "w-full px-4 py-3.5 bg-transparent border rounded-xl text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-600 transition-all duration-300 outline-none text-sm";
+    "w-full px-4 py-3.5 bg-transparent border rounded-xl text-foreground placeholder:text-muted-foreground transition-all duration-300 outline-none text-sm";
 
   const getInputClass = (field: string) => {
     if (errors[field]) return `${inputBase} border-red-400 dark:border-red-500`;
     if (focusedField === field)
-      return `${inputBase} border-blue-400 dark:border-blue-500 shadow-sm shadow-blue-500/10`;
-    return `${inputBase} border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700`;
+      return `${inputBase} border-brand shadow-sm shadow-brand/10`;
+    return `${inputBase} border-border hover:border-muted-foreground/40`;
   };
 
   return (
@@ -125,7 +125,7 @@ const ContactForm = ({ onSubmit }: ContactFormProps) => {
         {/* Name & Email row */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
               <User size={12} />
               Name
             </label>
@@ -146,7 +146,7 @@ const ContactForm = ({ onSubmit }: ContactFormProps) => {
           </div>
 
           <div>
-            <label className="text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
               <Mail size={12} />
               Email
             </label>
@@ -169,7 +169,7 @@ const ContactForm = ({ onSubmit }: ContactFormProps) => {
 
         {/* Message */}
         <div>
-          <label className="text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+          <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
             <MessageCircle size={12} />
             Message
           </label>
@@ -190,7 +190,7 @@ const ContactForm = ({ onSubmit }: ContactFormProps) => {
             ) : (
               <div />
             )}
-            <span className="text-[11px] font-mono text-zinc-400 dark:text-zinc-600">
+            <span className="text-[11px] font-mono text-muted-foreground">
               {formData.message.length}/500
             </span>
           </div>
@@ -202,7 +202,7 @@ const ContactForm = ({ onSubmit }: ContactFormProps) => {
           disabled={isSubmitting}
           className={`w-full py-3.5 px-6 rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-all duration-300 ${
             isSubmitting
-              ? "bg-zinc-200 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-600 cursor-not-allowed"
+              ? "bg-muted text-muted-foreground cursor-not-allowed"
               : "hue-cycle-submit text-white active:scale-[0.97] shadow-lg shadow-black/10"
           }`}
         >

@@ -69,7 +69,7 @@ const AboutIntroduction = () => {
               </div>
             </BoxReveal>
             <BoxReveal>
-              <blockquote className="border-l-2 md:border-l-4 border-blue-500 pl-3 md:pl-4 italic text-sm lg:text-base text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-800/50 p-1 md:p-2 lg:p-3 rounded-r-lg leading-relaxed">
+              <blockquote className="border-l-2 md:border-l-4 border-brand pl-3 md:pl-4 italic text-sm lg:text-base text-muted-foreground bg-muted/50 p-1 md:p-2 lg:p-3 rounded-r-lg leading-relaxed">
                 {'"Leveraging AI as a professional tool, not a replacement."'}
               </blockquote>
             </BoxReveal>
@@ -87,7 +87,7 @@ const AboutIntroduction = () => {
             >
               404 not found • 404 not found • 404 not found •
             </SpinningText>
-            <div className="inset-0 z-10 size-[200px] items-center justify-center rounded-full overflow-hidden border border-gray-600 bg-gradient-to-br from-purple-500/20 to-blue-500/20 backdrop-blur">
+            <div className="inset-0 z-10 size-[200px] items-center justify-center rounded-full overflow-hidden border border-border bg-gradient-to-br from-brand/20 to-brand/10 backdrop-blur">
               <Image
                 src={"/Profile2.jpg"}
                 alt="Imamgg"

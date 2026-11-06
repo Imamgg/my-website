@@ -16,7 +16,7 @@ export const ProfileImage: React.FC<ProfileImageProps> = ({
 }) => {
   return (
     <div
-      className={`relative rounded-full overflow-hidden border-4 border-white/20 dark:border-gray-800/20 shadow-2xl ${className}`}
+      className={`relative rounded-full overflow-hidden border-4 border-border/20 shadow-2xl ${className}`}
       style={{ width: size, height: size }}
     >
       <Image

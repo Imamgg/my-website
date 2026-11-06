@@ -63,7 +63,7 @@ export default function HomeClient() {
         </div>
       )}
       {!loadingPreloader && (
-        <div className="h-full w-full bg-zinc-100 dark:bg-zinc-900">
+        <div className="h-full w-full bg-background">
           <Navbar />
           <main
             data-scroll-container

@@ -163,7 +163,7 @@ const ProjectList = () => {
             <button
               onClick={prev}
               disabled={isAnimating}
-              className="w-11 h-11 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex items-center justify-center text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:border-zinc-400 dark:hover:border-zinc-600 transition-all duration-300 disabled:opacity-40 active:scale-95"
+              className="w-11 h-11 rounded-xl border border-border bg-card flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-muted-foreground/50 transition-all duration-300 disabled:opacity-40 active:scale-95"
               aria-label="Previous project"
             >
               <ChevronLeft size={18} />
@@ -175,7 +175,7 @@ const ProjectList = () => {
                 <button
                   key={i}
                   onClick={() => goTo(i)}
-                  className="relative flex-1 h-1.5 rounded-full overflow-hidden bg-zinc-200 dark:bg-zinc-800 transition-all duration-300"
+                  className="relative flex-1 h-1.5 rounded-full overflow-hidden bg-muted transition-all duration-300"
                   aria-label={`Go to project ${i + 1}`}
                 >
                   <div
@@ -183,7 +183,7 @@ const ProjectList = () => {
                       i === activeIndex
                         ? "hue-cycle-bg scale-100"
                         : i < activeIndex
-                        ? "bg-zinc-400 dark:bg-zinc-600 scale-100"
+                        ? "bg-muted-foreground scale-100"
                         : "scale-0"
                     }`}
                   />
@@ -194,7 +194,7 @@ const ProjectList = () => {
             <button
               onClick={next}
               disabled={isAnimating}
-              className="w-11 h-11 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex items-center justify-center text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:border-zinc-400 dark:hover:border-zinc-600 transition-all duration-300 disabled:opacity-40 active:scale-95"
+              className="w-11 h-11 rounded-xl border border-border bg-card flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-muted-foreground/50 transition-all duration-300 disabled:opacity-40 active:scale-95"
               aria-label="Next project"
             >
               <ChevronRight size={18} />
@@ -213,7 +213,7 @@ interface ProjectCardProps {
 
 function ProjectCard({ project, isActive }: ProjectCardProps) {
   return (
-    <div className="h-full rounded-2xl border border-zinc-200/60 dark:border-zinc-700/60 bg-white dark:bg-zinc-900 overflow-hidden relative group shadow-xl shadow-black/10 dark:shadow-black/40">
+    <div className="h-full rounded-2xl border border-border/60 bg-card overflow-hidden relative group shadow-xl shadow-black/10 dark:shadow-black/40">
       {isActive && (
         <BorderBeam
           duration={10}
@@ -307,20 +307,20 @@ function ProjectDetails({ project, index, total }: ProjectDetailsProps) {
           {String(index + 1).padStart(2, "0")}
         </span>
         <div className="flex flex-col gap-1">
-          <div className="h-px w-12 bg-zinc-300 dark:bg-zinc-700" />
-          <span className="text-[11px] font-mono text-zinc-400 dark:text-zinc-500 tracking-widest uppercase">
+          <div className="h-px w-12 bg-muted-foreground/30" />
+          <span className="text-[11px] font-mono text-muted-foreground tracking-widest uppercase">
             of {String(total).padStart(2, "0")} projects
           </span>
         </div>
       </div>
 
       {/* Title */}
-      <h3 className="text-3xl md:text-4xl font-bold text-zinc-900 dark:text-zinc-50 mb-4 leading-[1.1] tracking-tight">
+      <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-4 leading-[1.1] tracking-tight">
         {project.title}
       </h3>
 
       {/* Description */}
-      <p className="text-base leading-relaxed text-zinc-500 dark:text-zinc-400 mb-8 max-w-md">
+      <p className="text-base leading-relaxed text-muted-foreground mb-8 max-w-md">
         {project.description}
       </p>
 
@@ -329,7 +329,7 @@ function ProjectDetails({ project, index, total }: ProjectDetailsProps) {
         {project.tags.map((tag, i) => (
           <span
             key={tag}
-            className="project-tag-enter px-3 py-1.5 text-xs font-medium rounded-lg bg-zinc-100 dark:bg-zinc-800/80 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700/80"
+            className="project-tag-enter px-3 py-1.5 text-xs font-medium rounded-lg bg-muted text-muted-foreground border border-border/80"
             style={{ animationDelay: `${0.1 + i * 0.05}s` }}
           >
             {tag}
@@ -344,7 +344,7 @@ function ProjectDetails({ project, index, total }: ProjectDetailsProps) {
             href={project.sourceCode}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-center gap-2.5 px-5 py-3 text-sm font-medium rounded-xl border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:border-zinc-400 dark:hover:border-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all duration-300"
+            className="group flex items-center gap-2.5 px-5 py-3 text-sm font-medium rounded-xl border border-border text-foreground hover:border-muted-foreground/50 hover:bg-muted transition-all duration-300"
           >
             <Github size={16} className="group-hover:rotate-12 transition-transform duration-300" />
             Source Code
@@ -355,7 +355,7 @@ function ProjectDetails({ project, index, total }: ProjectDetailsProps) {
             href={project.demo}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-center gap-2.5 px-5 py-3 text-sm font-medium rounded-xl bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-all duration-300 active:scale-[0.97]"
+            className="group flex items-center gap-2.5 px-5 py-3 text-sm font-medium rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 active:scale-[0.97]"
           >
             <ExternalLink size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
             Live Demo

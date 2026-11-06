@@ -122,14 +122,14 @@ export default function CertificateGrid() {
           >
             <SpotlightCard
               className="cursor-pointer h-full"
-              spotlightColor="rgba(59, 130, 246, 0.15)"
+              spotlightColor="color-mix(in oklch, var(--brand) 15%, transparent)"
             >
               <div
-                className="h-full rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/80 dark:bg-zinc-900/60 backdrop-blur-sm overflow-hidden transition-all duration-300 hover:border-blue-400/50 dark:hover:border-blue-500/30 hover:shadow-xl hover:shadow-blue-500/5 dark:hover:shadow-blue-500/10 group"
+                className="h-full rounded-2xl border border-border/60 bg-card/80 backdrop-blur-sm overflow-hidden transition-all duration-300 hover:border-brand/50 hover:shadow-xl hover:shadow-brand/5 dark:hover:shadow-brand/10 group"
                 onClick={() => openLightbox(cert, i)}
               >
                 {/* Image */}
-                <div className="relative h-44 overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+                <div className="relative h-44 overflow-hidden bg-muted">
                   <Image
                     src={cert.image}
                     alt={cert.title}
@@ -141,15 +141,15 @@ export default function CertificateGrid() {
                 </div>
 
                 <div className="p-4">
-                  <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 leading-snug mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 line-clamp-2">
+                  <h3 className="text-sm font-semibold text-foreground leading-snug mb-2 group-hover:text-brand transition-colors duration-300 line-clamp-2">
                     {cert.title}
                   </h3>
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">
+                    <p className="text-xs text-muted-foreground truncate">
                       {cert.issuer}
                     </p>
                     {cert.date && (
-                      <span className="text-[11px] font-mono text-zinc-400 dark:text-zinc-500 shrink-0 bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded-md">
+                      <span className="text-[11px] font-mono text-muted-foreground shrink-0 bg-muted px-2 py-0.5 rounded-md">
                         {cert.date}
                       </span>
                     )}
@@ -198,7 +198,7 @@ export default function CertificateGrid() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.92, y: 20 }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              className="relative max-w-4xl w-full rounded-2xl overflow-hidden bg-white dark:bg-zinc-900 shadow-2xl shadow-black/40"
+              className="relative max-w-4xl w-full rounded-2xl overflow-hidden bg-card shadow-2xl shadow-black/40"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close button */}
@@ -211,7 +211,7 @@ export default function CertificateGrid() {
               </button>
 
               {/* Image */}
-              <div className="relative w-full aspect-[16/10] bg-zinc-100 dark:bg-zinc-800">
+              <div className="relative w-full aspect-[16/10] bg-muted">
                 <Image
                   src={selected.image}
                   alt={selected.title}
@@ -223,12 +223,12 @@ export default function CertificateGrid() {
               </div>
 
               {/* Info bar */}
-              <div className="p-5 md:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-zinc-200 dark:border-zinc-800">
+              <div className="p-5 md:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-border">
                 <div className="min-w-0">
-                  <h3 className="text-base md:text-lg font-semibold text-zinc-900 dark:text-zinc-100 leading-snug">
+                  <h3 className="text-base md:text-lg font-semibold text-foreground leading-snug">
                     {selected.title}
                   </h3>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+                  <p className="text-sm text-muted-foreground mt-1">
                     {selected.issuer}
                     {selected.date && ` · ${selected.date}`}
                   </p>
@@ -238,7 +238,7 @@ export default function CertificateGrid() {
                     href={selected.credential}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-xl bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors duration-300 shrink-0"
+                    className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-300 shrink-0"
                   >
                     <ExternalLink size={14} />
                     Verify

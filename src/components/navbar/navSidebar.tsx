@@ -217,7 +217,7 @@ export default function NavSidebar() {
         >
           <span
             className={cn(
-              "text-zinc-600 dark:text-zinc-300 transition-transform duration-500",
+              "text-muted-foreground transition-transform duration-500",
               isExpanded ? "rotate-180" : "rotate-0"
             )}
           >

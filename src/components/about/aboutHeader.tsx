@@ -19,7 +19,7 @@ const AboutHeader = ({
       {breadcrumbText && breadcrumbIcon && (
         <div className="flex items-center gap-2 mb-6">
           {breadcrumbIcon}
-          <span className="text-sm text-zinc-500 dark:text-zinc-400 font-mono tracking-wider">
+          <span className="text-sm text-muted-foreground font-mono tracking-wider">
             {breadcrumbText}
           </span>
         </div>
